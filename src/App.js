@@ -26,6 +26,7 @@ function App() {
             autor: doc.data().autor,
           })
         })
+        lista2.sort(function(a, b){return b.autor-a.autor});
         setPosts(lista2);
       })
     }
