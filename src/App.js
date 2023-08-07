@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
+import Modal from 'react-bootstrap/Modal';
 import userEvent from "@testing-library/user-event";
 
 function App() {
@@ -14,6 +15,9 @@ function App() {
   const [autor, setAutor] = useState("");
   const [idPost, setIdPost] = useState("");
   const [botao, setBotao] = useState("Cadastrar");
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(()=>{
     async function loadPosts(){
@@ -58,6 +62,7 @@ function App() {
   //  })
  // }
   async function editarPostAcao(id,autor,titulo){
+    setShow(true);
     setIdPost(id);
     setAutor(autor);
     setTitulo(titulo);
@@ -115,6 +120,7 @@ function App() {
       autor: autor,
     }).then(() => {
       console.log("psot atualizxado")
+      setShow(false);
       setAutor("");
       setTitulo("");
       setIdPost("");
@@ -128,32 +134,10 @@ function App() {
 }
   return (
     <div className="App">
-      <Container>
-      <h2>Cadastro de pontos</h2>
-      <Form>
-      <Form.Group className="mb-3">
-        <Form.Label>ID Jogador</Form.Label>
-        <Form.Control disabled="true" type="text" placeholder="ID do Jogador" value={idPost} onChange={ (e) => setIdPost(e.target.value)} />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Nome</Form.Label>
-        <Form.Control type="text" placeholder="Nome" value={titulo} onChange={ (e) => setTitulo(e.target.value)}/>
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Pontos</Form.Label>
-        <Form.Control type="text" placeholder="Pontos Totais" value={autor} onChange={(e) => setAutor(e.target.value)} />
-      </Form.Group>
-    </Form>
-    </Container>
-
-
-      
-      
-      
       <div className="container">
-      <Button as="a" variant="success" onClick={handleAdd}>{botao}</Button>
+      
       <br></br>
-      <h2>Jogadores Cadastrados</h2>
+      <h2>Jogadores Cadastrados <Button as="a" size="sm" variant="success" onClick={handleShow}>Novo Jogador</Button></h2>
       {/*
       <Button as="a" variant="success" onClick={editarPost}>Editar</Button>
       <hr></hr>
@@ -179,7 +163,8 @@ function App() {
               <td>{post.autor}</td>
               <td>
                 {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>*/}
-              <Button as="a" variant="primary" onClick={() => editarPostAcao(post.id,post.autor,post.titulo)}>Editar</Button></td>
+                
+              <Button as="a" variant="primary" size="sm"onClick={() => editarPostAcao(post.id,post.autor,post.titulo)}>Editar</Button></td>
             </tr>
             
           )
@@ -187,6 +172,56 @@ function App() {
       </tbody>
     </Table>
     </div>
+
+    {/*<Container>
+      <h2>Cadastro de pontos</h2>
+      <Form>
+      <Form.Group className="mb-3">
+        <Form.Label>ID Jogador</Form.Label>
+        <Form.Control disabled="true" type="text" placeholder="ID do Jogador" value={idPost} onChange={ (e) => setIdPost(e.target.value)} />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+        <Form.Label>Nome</Form.Label>
+        <Form.Control type="text" placeholder="Nome" value={titulo} onChange={ (e) => setTitulo(e.target.value)}/>
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+        <Form.Label>Pontos</Form.Label>
+        <Form.Control type="text" placeholder="Pontos Totais" value={autor} onChange={(e) => setAutor(e.target.value)} />
+      </Form.Group>
+    </Form>
+    <Button as="a" variant="success" onClick={handleAdd}>{botao}</Button>
+    </Container>*/}
+    <br></br>
+    <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Jogador</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <Form>
+      <Form.Group className="mb-3">
+        <Form.Label>ID Jogador</Form.Label>
+        <Form.Control disabled="true" type="text" placeholder="ID do Jogador" value={idPost} onChange={ (e) => setIdPost(e.target.value)} />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+        <Form.Label>Nome</Form.Label>
+        <Form.Control type="text" placeholder="Nome" value={titulo} onChange={ (e) => setTitulo(e.target.value)}/>
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+        <Form.Label>Pontos</Form.Label>
+        <Form.Control type="text" placeholder="Pontos Totais" value={autor} onChange={(e) => setAutor(e.target.value)} />
+      </Form.Group>
+    </Form>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Fechar
+          </Button>
+          <Button variant="primary" onClick={handleClose} onClick={handleAdd}>
+            {botao}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
