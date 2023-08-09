@@ -16,6 +16,8 @@ import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
 import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import Badge from 'react-bootstrap/Badge';
 
 function Jogos() {
   const [jogos, setJogos] = useState([]);
@@ -119,18 +121,16 @@ function Jogos() {
   return (
     <div className="App">
       <Container>
-
         <br></br>
-        <h4>
-          Jogo Atual - {jogoAtualSequencia} - Inicio : {jogoAtualInicio} {" "}
-          <Button as="a" size="sm" variant="success" onClick={handleShow}>
-            Adicionar jogadores
-          </Button>
-        </h4>
+      <Card>
+      <Card.Header><Badge bg="success">Jogo em Andamento</Badge> - {jogoAtualSequencia} - Inicio : {jogoAtualInicio} {" "}
+          </Card.Header>
+      <Card.Body>
+        <Card.Title>Jogadores <Button as="a" size="sm" variant="success" onClick={handleShow}>+</Button></Card.Title>
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Jogador</th>
+              <th>Nome</th>
               <th>Ação</th>
             </tr>
           </thead>
@@ -149,12 +149,15 @@ function Jogos() {
             })}
           </tbody>
         </Table>
-        <Button as="a" size="sm" variant="danger" onClick={handleShow}>
-          Finalizar jogo Atual
-        </Button>
-
+        
+        <Button as="a" size="sm" variant="danger" onClick={handleShow}>Finalizar Jogo</Button>
+        
+      </Card.Body>
+    </Card>
 
         <br></br>
+        
+       
         <br></br>
 
 
