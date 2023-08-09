@@ -15,6 +15,7 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
+import Container from 'react-bootstrap/Container';
 
 function Jogos() {
   const [jogos, setJogos] = useState([]);
@@ -54,8 +55,8 @@ function Jogos() {
           });
         });
         lista2.sort(function (a, b) { return b.sequencia - a.sequencia });
-        const jogo  = lista2[0];
-        
+        const jogo = lista2[0];
+
         setJogoAtualSequencia(jogo.sequencia);
         setJogoAtual(jogo.id);
         setJogoAtualInicio(jogo.inicio);
@@ -117,10 +118,11 @@ function Jogos() {
 
   return (
     <div className="App">
-      <div className="container">
+      <Container>
+
         <br></br>
         <h4>
-          Jogo Atual - {jogoAtualSequencia} - Inicio : {jogoAtualInicio} {" "}  
+          Jogo Atual - {jogoAtualSequencia} - Inicio : {jogoAtualInicio} {" "}
           <Button as="a" size="sm" variant="success" onClick={handleShow}>
             Adicionar jogadores
           </Button>
@@ -129,9 +131,6 @@ function Jogos() {
           <thead>
             <tr>
               <th>Jogador</th>
-              <th>BuyIn</th>
-              <th>Rebuy</th>
-              <th>AddOn</th>
               <th>Ação</th>
             </tr>
           </thead>
@@ -139,11 +138,7 @@ function Jogos() {
             {jogos.map((jogos) => {
               return (
                 <tr key={jogos.id}>
-                  <td>{ jogos.id}</td>
                   <td>{jogos.sequencia}  </td>
-                  <td>{jogos.inicio}  </td>
-                  <td>{jogos.fim}  </td>
-
                   <td>
                     <Button as="a" variant="primary" size="sm">
                       Detalhes
@@ -155,14 +150,14 @@ function Jogos() {
           </tbody>
         </Table>
         <Button as="a" size="sm" variant="danger" onClick={handleShow}>
-            Finalizar jogo Atual
-          </Button>
+          Finalizar jogo Atual
+        </Button>
+
+
         <br></br>
-        <hr></hr>
-      </div>
-      
-      <div className="container">
         <br></br>
+
+
         <h2>
           Jogos Finalizados{" "}
           <Button as="a" size="sm" variant="success" onClick={handleShow}>
@@ -172,8 +167,8 @@ function Jogos() {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Jogo</th>
-              <th>Sequencia</th>
+
+              <th>Seq.</th>
               <th>Inicio</th>
               <th>Fim</th>
               <th>Ação</th>
@@ -183,7 +178,7 @@ function Jogos() {
             {jogos.map((jogos) => {
               return (
                 <tr key={jogos.id}>
-                  <td>{ jogos.id}</td>
+
                   <td>{jogos.sequencia} </td>
                   <td>{jogos.inicio} </td>
                   <td>{jogos.fim} </td>
@@ -198,8 +193,10 @@ function Jogos() {
             })}
           </tbody>
         </Table>
-      </div>
+
+      </Container>
       <br></br>
+
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Jogo</Modal.Title>
@@ -258,6 +255,7 @@ function Jogos() {
           </Button>
         </Modal.Footer>
       </Modal>
+
     </div>
   );
 }
