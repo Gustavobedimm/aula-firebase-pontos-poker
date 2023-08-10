@@ -83,11 +83,8 @@ function Jogos() {
         const jogo = lista2[0];
         buscarJogadores();
         //mudei  o id para sequencia fazer direto ao cadastrar jogo add jogadores
-        jogadoresAddJogo(jogo);
-        jogadoresJogoBuscar(jogo);
-
         
-
+        jogadoresJogoBuscar(jogo);
         setJogoAtualSequencia(jogo.sequencia);
         setJogoAtual(jogo.id);
         setJogoAtualInicio(jogo.inicio);
@@ -103,6 +100,7 @@ function Jogos() {
       //CADASTRAR NOVO
       await addDoc(collection(db, "jogos"), {
         id: sequencia,
+        sequencia: sequencia,
         inicio: inicio,
         fim: fim,
       })
@@ -117,6 +115,7 @@ function Jogos() {
         .catch((error) => {
           console.log("Erro ao Cadastrar post" + error);
         });
+        jogadoresAddJogo(sequencia);
 
       setBotao("Cadastrar");
     } else {
@@ -128,14 +127,14 @@ function Jogos() {
       setFim("");
     }
   }
-  async function jogadoresAddJogo(jogo) {
+  async function jogadoresAddJogo(id_jogo) {
       for (const item of jogadores) {
         await addDoc(collection(db, "Jogos_Jogadores"), {
           id: item.id,
           nome: item.titulo,
           buyin: 0,
           rebuy: 0,
-          idJogo: jogo.id,
+          idJogo: id_jogo,
         })
           .then(() => {
           })
@@ -148,7 +147,7 @@ function Jogos() {
       const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
         let lista2 = [];
         snapshot2.forEach((doc) => {
-          if(doc.data().idJogo === jogo.id){
+          if(doc.data().idJogo === jogo.sequencia){
             lista2.push({
               id: doc.id,
               nome: doc.data().nome,
@@ -187,7 +186,7 @@ function Jogos() {
           <Card.Header><Badge bg="success">Jogo em Andamento</Badge> - {jogoAtualSequencia} - Inicio : {jogoAtualInicio} {" "}
           </Card.Header>
           <Card.Body>
-            <Card.Title>Jogadores <Button as="a" size="sm" variant="success" onClick={handleShow2}>+</Button></Card.Title>
+            <Card.Title>Jogadores </Card.Title>
             <Table striped bordered hover>
               <thead>
                 <tr>

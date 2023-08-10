@@ -7,7 +7,15 @@ import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import userEvent from "@testing-library/user-event";
+import confetti from "https://cdn.skypack.dev/canvas-confetti";
 import { useNavigate } from "react-router-dom";
+//import   "./confet.js";
+
+
+
+
+
+
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -46,6 +54,7 @@ function Home() {
       })
     }
     loadPosts();
+
   }, [])
 
   async function excluirPost(id) {
@@ -151,8 +160,38 @@ function Home() {
 
 
   }
+  
+const doItNow = (evt, hard) => {
+	const direction = Math.sign(lastX - evt.clientX);
+	lastX = evt.clientX;
+	const particleCount = hard ? r(122, 245) : r(2, 15);
+	confetti({
+		particleCount,
+		angle: r(90, 90 + direction * 30),
+		spread: r(45, 80),
+		origin: {
+			x: evt.clientX / window.innerWidth,
+			y: evt.clientY / window.innerHeight
+		}
+	});
+};
+const doIt = (evt) => {
+	doItNow(evt, false);
+};
+
+const doItHard = (evt) => {
+	doItNow(evt, true);
+};
+
+let lastX = 0;
+
+
+function r(mi, ma) {
+	return parseInt(Math.random() * (ma - mi) + mi);
+}
   return (
-    <div className="App">
+    <div className="App" id="canvas" onClick={doItHard}>
+     
       <div className="container">
 
         <br></br>
@@ -177,7 +216,7 @@ function Home() {
             {posts.map((post,index) => {
               return (
                 <tr key={post.id}>
-                  <td>{index + 1} ºnp </td>
+                  <td>{index + 1}º </td>
                   <td>{post.titulo} </td>
                   <td>{post.autor}</td>
                   <td>
@@ -191,6 +230,7 @@ function Home() {
           </tbody>
         </Table>
       </div>
+      
 
       {/*<Container>
       <h2>Cadastro de pontos</h2>
