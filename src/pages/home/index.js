@@ -9,7 +9,7 @@ import Modal from 'react-bootstrap/Modal';
 import userEvent from "@testing-library/user-event";
 import confetti from "https://cdn.skypack.dev/canvas-confetti";
 import { useNavigate } from "react-router-dom";
-//import   "./confet.js";
+
 
 
 
