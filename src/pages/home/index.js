@@ -190,7 +190,7 @@ function r(mi, ma) {
 	return parseInt(Math.random() * (ma - mi) + mi);
 }
   return (
-    <div className="App" id="canvas" onClick={doItHard}>
+    <div className="App" onClick={doItHard}>
      
       <div className="container">
 
