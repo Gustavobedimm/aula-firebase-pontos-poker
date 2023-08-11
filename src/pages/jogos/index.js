@@ -38,6 +38,7 @@ function Jogos() {
   const [rebuy, setRebuy] = useState("");
   const [addon, setAddon] = useState("");
   const [nome, setNome] = useState("");
+  const [dataAtual, setDataAtual] = useState("");
 
 
 
@@ -73,7 +74,10 @@ function Jogos() {
   };
   
 
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    montadata();
+    setShow(true)
+  };
   const handleShow2 = () => setShow2(true);
 
   useEffect(() => {
@@ -88,6 +92,7 @@ function Jogos() {
             fim: doc.data().fim,
           });
         });
+        
         lista2.sort(function (a, b) { return b.sequencia - a.sequencia });
         const jogo = lista2[0];
         buscarJogadores();
@@ -104,6 +109,16 @@ function Jogos() {
     }
     loadJogos();
   }, []);
+  function montadata(){
+    const date = new Date();
+        const dia = date.getDate();
+        const mes = date.getMonth() + 1;
+        const ano = date.getFullYear();
+        const h =date.getHours();
+        const m =date.getMinutes();
+        const s =date.getSeconds();
+        setDataAtual(dia+"/"+mes+"/"+ano+" "+h+":"+m+":"+s);
+  }
   async function jogoAdd() {
     if (senha === "199605") {
       //CADASTRAR NOVO
@@ -125,6 +140,9 @@ function Jogos() {
           console.log("Erro ao Cadastrar post" + error);
         });
         jogadoresAddJogo(sequencia);
+        
+        
+
 
       setBotao("Cadastrar");
     } else {
@@ -238,9 +256,9 @@ function Jogos() {
               <thead>
                 <tr>
                   <th>Nome</th>
-                  <th>Buyin</th>
-                  <th>Rebuy</th>
-                  <th>AddOn</th>
+                  <th>Bi</th>
+                  <th>Rb</th>
+                  <th>Ao</th>
 
                   <th>Ação</th>
                 </tr>
@@ -328,16 +346,7 @@ function Jogos() {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>ID Jogo</Form.Label>
-              <Form.Control
-                disabled="true"
-                type="text"
-                placeholder="ID do Jogo"
-                value={idJogo}
-                onChange={(e) => setIdJogo(e.target.value)}
-              />
-            </Form.Group>
+            
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Sequencia</Form.Label>
               <Form.Control
@@ -350,9 +359,10 @@ function Jogos() {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Inicio</Form.Label>
               <Form.Control
+                disabled="true"
                 type="text"
                 placeholder="Data Inicio"
-                value={inicio}
+                value={dataAtual}
                 onChange={(e) => setInicio(e.target.value)}
               />
             </Form.Group>
