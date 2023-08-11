@@ -351,6 +351,7 @@ function Jogos() {
               <Form.Label>Sequencia</Form.Label>
               <Form.Control
                 type="text"
+                pattern="\d*"
                 placeholder="Sequencial do jogo"
                 value={sequencia}
                 onChange={(e) => setSequencia(e.target.value)}
@@ -419,6 +420,7 @@ function Jogos() {
               <Form.Label>Buy In</Form.Label>
               <Form.Control
                 type="text"
+                pattern="\d*"
                 placeholder="Buy In"
                 value={buyin}
                 onChange={(e) => setBuyin(e.target.value)}
@@ -428,6 +430,7 @@ function Jogos() {
               <Form.Label>Rebuy</Form.Label>
               <Form.Control
                 type="text"
+                pattern="\d*"
                 placeholder="Rebuy"
                 value={rebuy}
                 onChange={(e) => setRebuy(e.target.value)}
@@ -437,6 +440,7 @@ function Jogos() {
               <Form.Label>Add On</Form.Label>
               <Form.Control
                 type="text"
+                pattern="\d*"
                 placeholder="Add On"
                 value={addon}
                 onChange={(e) => setAddon(e.target.value)}

@@ -240,7 +240,7 @@ function Home() {
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Pontos</Form.Label>
-              <Form.Control type="text" placeholder="Pontos Totais" value={autor} onChange={(e) => setAutor(e.target.value)} />
+              <Form.Control type="text" pattern="\d*" placeholder="Pontos Totais" value={autor} onChange={(e) => setAutor(e.target.value)} />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Senha</Form.Label>
