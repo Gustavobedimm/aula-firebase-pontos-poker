@@ -8,8 +8,6 @@ import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import userEvent from "@testing-library/user-event";
 import { useNavigate } from "react-router-dom";
-import confetti from "https://cdn.skypack.dev/canvas-confetti";
-
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -155,36 +153,10 @@ function Home() {
 
   }
  
-const doItNow = (evt, hard) => {
-	const direction = Math.sign(lastX - evt.clientX);
-	lastX = evt.clientX;
-	const particleCount = hard ? r(122, 245) : r(2, 15);
-	confetti({
-		particleCount,
-		angle: r(90, 90 + direction * 30),
-		spread: r(45, 80),
-		origin: {
-			x: evt.clientX / window.innerWidth,
-			y: evt.clientY / window.innerHeight
-		}
-	});
-};
-const doIt = (evt) => {
-	doItNow(evt, false);
-};
-
-const doItHard = (evt) => {
-	doItNow(evt, true);
-};
-
-let lastX = 0;
 
 
-function r(mi, ma) {
-	return parseInt(Math.random() * (ma - mi) + mi);
-}
+
   
-
   return (
     
     <div className="App">
@@ -192,7 +164,7 @@ function r(mi, ma) {
       <div className="container">
 
         <br></br>
-        <h2>Ranking <Button as="a" size="sm" variant="success" onClick={handleShow}>Novo Jogador</Button> <Button as="a" size="sm" variant="success" onClick={goJogos}>Jogos</Button></h2>
+        <h2 style={{color: "white"}}>Ranking 🏆 </h2>
         {/*
       <Button as="a" variant="success" onClick={editarPost}>Editar</Button>
       <hr></hr>
@@ -204,19 +176,21 @@ function r(mi, ma) {
           <thead>
             <tr>
               <th>Posição</th>
-              <th>Nome</th>
               <th>Pontos</th>
+              <th>Nome</th>
+              
               <th>Ação</th>
             </tr>
           </thead>
           <tbody>
             {posts.map((post,index) => {
               return (
-                <tr key={post.id} onClick={doItHard}>
-                  <td>{index + 1}º </td>
+                <tr key={post.id}>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{index + 1}º </td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{post.autor}</td>
                   <td>{post.titulo} </td>
-                  <td>{post.autor}</td>
-                  <td>
+                  
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>*/}
 
                     <Button as="a" variant="primary" size="sm" onClick={() => editarPostAcao(post.id, post.autor, post.titulo)}>Editar</Button></td>
@@ -226,6 +200,7 @@ function r(mi, ma) {
             })}
           </tbody>
         </Table>
+        <Button as="a" size="sm" variant="success" onClick={handleShow}>Novo Jogador</Button> <Button as="a" size="sm" variant="success" onClick={goJogos}>Jogos</Button>
       </div>
       
 

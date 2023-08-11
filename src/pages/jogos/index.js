@@ -31,6 +31,15 @@ function Jogos() {
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
   const [senha, setSenha] = useState("");
+  
+  
+  const [idJogadorJogo, setIdJogadorJogo] = useState("");
+  const [buyin, setBuyin] = useState("");
+  const [rebuy, setRebuy] = useState("");
+  const [addon, setAddon] = useState("");
+  const [nome, setNome] = useState("");
+
+
 
 
 
@@ -127,13 +136,42 @@ function Jogos() {
       setFim("");
     }
   }
+  async function alteraJogadorJogo() {
+    if (senha === '199605') {
+       
+        //EDITAR PELO ID
+        const docRef = doc(db, "Jogos_Jogadores", idJogadorJogo);
+        await updateDoc(docRef, {
+          buyin: buyin,
+          rebuy: rebuy,
+          addon: addon,
+        }).then(() => {
+          console.log("psot atualizxado")
+          setShow2(false);
+          setIdJogadorJogo("");
+          setBuyin("");
+          setRebuy("");
+          setAddon("");
+        }).catch((error) => {
+          console.log("erro ao atualizar post")
+        })
+      
+    }else{
+      alert("Senha incorreta")
+      setShow2(false);
+    }
+
+
+  }
+
+
   async function jogadoresAddJogo(id_jogo) {
       for (const item of jogadores) {
         await addDoc(collection(db, "Jogos_Jogadores"), {
-          id: item.id,
           nome: item.titulo,
           buyin: 0,
           rebuy: 0,
+          addon: 0,
           idJogo: id_jogo,
         })
           .then(() => {
@@ -153,6 +191,7 @@ function Jogos() {
               nome: doc.data().nome,
               buyin: doc.data().buyin,
               rebuy: doc.data().rebuy,
+              addon: doc.data().addon,
             });
           }
         });
@@ -177,13 +216,21 @@ function Jogos() {
         console.log("deu algum erro ao buscar" + error)
       })
   }
+  async function editarJogadorJogo(id, buyin, rebuy,addon, nome) {
+    setShow2(true);
+    setIdJogadorJogo(id);
+    setBuyin(buyin);
+    setRebuy(rebuy);
+    setAddon(addon);
+    setNome(nome);
+  }
 
   return (
     <div className="App">
       <Container>
         <br></br>
         <Card>
-          <Card.Header><Badge bg="success">Jogo em Andamento</Badge> - {jogoAtualSequencia} - Inicio : {jogoAtualInicio} {" "}
+          <Card.Header><Badge bg="success">Jogo em Andamento - {jogoAtualSequencia}</Badge>  {" "}<Badge bg="primary">Inicio - {jogoAtualInicio}</Badge>
           </Card.Header>
           <Card.Body>
             <Card.Title>Jogadores </Card.Title>
@@ -191,6 +238,10 @@ function Jogos() {
               <thead>
                 <tr>
                   <th>Nome</th>
+                  <th>Buyin</th>
+                  <th>Rebuy</th>
+                  <th>AddOn</th>
+
                   <th>Ação</th>
                 </tr>
               </thead>
@@ -198,11 +249,15 @@ function Jogos() {
                 {jogadoresJogo.map((jogadoresJogo) => {
                   return (
                     <tr key={jogadoresJogo.id}>
-                      <td>{jogadoresJogo.nome}  </td>
-                      <td>
-                        <Button as="a" variant="primary" size="sm" onClick={handleShow2}>
-                          Detalhes
+                      <td >{jogadoresJogo.nome}  </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogadoresJogo.buyin}  </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogadoresJogo.rebuy}  </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogadoresJogo.addon}  </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                        <Button as="a" variant="primary" size="sm" onClick={() => editarJogadorJogo(jogadoresJogo.id, jogadoresJogo.buyin, jogadoresJogo.rebuy,jogadoresJogo.addon,jogadoresJogo.nome)}>
+                          Editar
                         </Button>
+                         
                       </td>
                     </tr>
                   );
@@ -210,7 +265,7 @@ function Jogos() {
               </tbody>
             </Table>
 
-            <Button as="a" size="sm" variant="danger" onClick={handleShow}>Finalizar Jogo</Button>
+            <Button as="a" size="sm" variant="primary" onClick={handleShow}>Finalizar Jogo</Button>
 
           </Card.Body>
         </Card>
@@ -221,12 +276,14 @@ function Jogos() {
         <br></br>
 
 
-        <h2>
-          Jogos Finalizados{" "}
-          <Button as="a" size="sm" variant="success" onClick={handleShow}>
-            Novo Jogo
-          </Button>
-        </h2>
+        <Card>
+          <Card.Header><Badge bg="primary">Finalizados</Badge>
+          
+          </Card.Header>
+          <Card.Body>
+            <Card.Title>Jogos Finalizados </Card.Title>
+          
+        
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -242,11 +299,11 @@ function Jogos() {
               return (
                 <tr key={jogos.id}>
 
-                  <td>{jogos.sequencia} </td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogos.sequencia} </td>
                   <td>{jogos.inicio} </td>
                   <td>{jogos.fim} </td>
 
-                  <td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     <Button as="a" variant="primary" size="sm">
                       Detalhes
                     </Button>
@@ -256,6 +313,11 @@ function Jogos() {
             })}
           </tbody>
         </Table>
+        <Button as="a" size="sm" variant="success" onClick={handleShow}>
+            Novo Jogo
+          </Button>
+        </Card.Body>
+        </Card>
 
       </Container>
       <br></br>
@@ -297,6 +359,7 @@ function Jogos() {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Fim</Form.Label>
               <Form.Control
+                disabled="true"
                 type="text"
                 placeholder="Data Fim"
                 value={fim}
@@ -327,7 +390,7 @@ function Jogos() {
 
       <Modal show={show2} onHide={handleClose2}>
         <Modal.Header closeButton>
-          <Modal.Title>Jogador</Modal.Title>
+          <Modal.Title>{nome}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -337,26 +400,18 @@ function Jogos() {
                 disabled="true"
                 type="text"
                 placeholder="ID do Jogador"
-                value={idJogador}
-                onChange={(e) => setIdJogador(e.target.value)}
+                value={idJogadorJogo}
+                onChange={(e) => setIdJogadorJogo(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Nome</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Nome Jogador"
-                value={nomeJogador}
-                onChange={(e) => setNomeJogador(e.target.value)}
-              />
-            </Form.Group>
+            
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Buy In</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Buy In"
-                value={buyinJogador}
-                onChange={(e) => setBuyinJogador(e.target.value)}
+                value={buyin}
+                onChange={(e) => setBuyin(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
@@ -364,8 +419,8 @@ function Jogos() {
               <Form.Control
                 type="text"
                 placeholder="Rebuy"
-                value={rebuyJogador}
-                onChange={(e) => setRebuyJogador(e.target.value)}
+                value={rebuy}
+                onChange={(e) => setRebuy(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
@@ -373,8 +428,8 @@ function Jogos() {
               <Form.Control
                 type="text"
                 placeholder="Add On"
-                value={addonJogador}
-                onChange={(e) => setAddonJogador(e.target.value)}
+                value={addon}
+                onChange={(e) => setAddon(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
@@ -387,7 +442,7 @@ function Jogos() {
           <Button variant="secondary" onClick={handleClose2}>
             Fechar
           </Button>
-          <Button variant="primary" onClick={jogoAdd}>
+          <Button variant="primary" onClick={alteraJogadorJogo}>
             Salvar
           </Button>
         </Modal.Footer>
