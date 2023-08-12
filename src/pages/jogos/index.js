@@ -18,6 +18,8 @@ import Modal from "react-bootstrap/Modal";
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function Jogos() {
   const [jogos, setJogos] = useState([]);
@@ -146,8 +148,19 @@ function Jogos() {
 
       setBotao("Cadastrar");
     } else {
-      alert("Senha incorreta");
       setShow(false);
+      
+      toast.error('Senha incorreta', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+      
       setIdJogo("");
       setSequencia("");
       setInicio("");
@@ -175,8 +188,18 @@ function Jogos() {
         })
       
     }else{
-      alert("Senha incorreta")
+      
       setShow2(false);
+      toast.error('Senha incorreta', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
     }
 
 
@@ -461,8 +484,7 @@ function Jogos() {
           </Button>
         </Modal.Footer>
       </Modal>
-
-
+      <ToastContainer/>
 
       
 
