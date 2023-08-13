@@ -127,16 +127,27 @@ function Jogos() {
       await addDoc(collection(db, "jogos"), {
         id: sequencia,
         sequencia: sequencia,
-        inicio: inicio,
+        inicio: dataAtual,
         fim: fim,
       })
         .then(() => {
-          console.log("Cadastro realizado com sucesso");
+          setShow(false);
+          toast.success('Novo Jogo Iniciado, Bom jogo!', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            });
+          
           setIdJogo("");
           setSequencia("");
           setInicio("");
           setFim("");
-          setShow(false);
+          
         })
         .catch((error) => {
           console.log("Erro ao Cadastrar post" + error);
@@ -152,7 +163,7 @@ function Jogos() {
       
       toast.error('Senha incorreta', {
         position: "top-center",
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -177,14 +188,13 @@ function Jogos() {
           rebuy: rebuy,
           addon: addon,
         }).then(() => {
-          console.log("psot atualizxado")
           setShow2(false);
           setIdJogadorJogo("");
           setBuyin("");
           setRebuy("");
           setAddon("");
         }).catch((error) => {
-          console.log("erro ao atualizar post")
+          alert(error);
         })
       
     }else{
@@ -192,7 +202,7 @@ function Jogos() {
       setShow2(false);
       toast.error('Senha incorreta', {
         position: "top-center",
-        autoClose: 5000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
