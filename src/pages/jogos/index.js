@@ -301,11 +301,11 @@ function Jogos() {
                   return (
                     <tr key={jogadoresJogo.id}>
                       <td >{jogadoresJogo.nome}  </td>
-                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogadoresJogo.buyin}  </td>
-                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogadoresJogo.rebuy}  </td>
-                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogadoresJogo.addon}  </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="success" className="w-100">{jogadoresJogo.buyin}</Badge>   </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="warning" className="w-100">{jogadoresJogo.rebuy} </Badge> </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="danger" className="w-100">{jogadoresJogo.addon} </Badge>  </td>
                       <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                        <Button as="a" variant="primary" size="sm" onClick={() => editarJogadorJogo(jogadoresJogo.id, jogadoresJogo.buyin, jogadoresJogo.rebuy,jogadoresJogo.addon,jogadoresJogo.nome)}>
+                        <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarJogadorJogo(jogadoresJogo.id, jogadoresJogo.buyin, jogadoresJogo.rebuy,jogadoresJogo.addon,jogadoresJogo.nome)}>
                           Editar
                         </Button>
                          
@@ -355,7 +355,7 @@ function Jogos() {
                   <td>{jogos.fim} </td>
 
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                    <Button as="a" variant="primary" size="sm">
+                    <Button as="a" variant="primary" size="sm" className="w-100">
                       Detalhes
                     </Button>
                   </td>

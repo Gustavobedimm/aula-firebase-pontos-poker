@@ -193,7 +193,7 @@ function Home() {
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>*/}
 
-                    <Button as="a" variant="primary" size="sm" onClick={() => editarPostAcao(post.id, post.autor, post.titulo)}>Editar</Button></td>
+                    <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarPostAcao(post.id, post.autor, post.titulo)}>Editar</Button></td>
                 </tr>
 
               )
