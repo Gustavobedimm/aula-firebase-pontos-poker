@@ -19,6 +19,7 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import { ToastContainer, toast } from 'react-toastify';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import "react-toastify/dist/ReactToastify.css";
 
 function Jogos() {
@@ -98,13 +99,14 @@ function Jogos() {
         lista2.sort(function (a, b) { return b.sequencia - a.sequencia });
         const jogo = lista2[0];
         buscarJogadores();
-        //mudei  o id para sequencia fazer direto ao cadastrar jogo add jogadores
         
         jogadoresJogoBuscar(jogo);
         setJogoAtualSequencia(jogo.sequencia);
         setJogoAtual(jogo.id);
         setJogoAtualInicio(jogo.inicio);
         setJogoAtualFim(jogo.fim);
+        
+        
 
         setJogos(lista2);
       });
@@ -128,7 +130,7 @@ function Jogos() {
         id: sequencia,
         sequencia: sequencia,
         inicio: dataAtual,
-        fim: fim,
+        fim: 0,
       })
         .then(() => {
           setShow(false);
@@ -214,6 +216,58 @@ function Jogos() {
 
 
   }
+
+  async function finalizaJogo() {
+    montadata();
+    if (senha === '199605') {
+      
+        //EDITAR PELO ID
+        
+        const docRef = doc(db, "jogos", jogoAtual);
+        console.log('data atuala'+dataAtual);
+        await updateDoc(docRef, {
+          fim: dataAtual,
+        }).then(() => {
+          toast.success('Jogo finalizado com sucesso!', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            });
+        
+        }).catch((error) => {
+          alert(error);
+        })
+
+        setJogoAtual("");
+        setJogoAtualInicio("");
+        setJogoAtualFim("");
+        setJogoAtualSequencia("");
+        setJogadoresJogo([]);
+      
+    }else{
+      
+      
+      toast.error('Senha incorreta', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+    }
+
+
+  }
+
+
 
 
   async function jogadoresAddJogo(id_jogo) {
@@ -316,7 +370,7 @@ function Jogos() {
               </tbody>
             </Table>
 
-            <Button as="a" size="sm" variant="primary" onClick={handleShow}>Finalizar Jogo</Button>
+            <Button as="a" size="sm" variant="primary" onClick={finalizaJogo}>Finalizar Jogo</Button>
 
           </Card.Body>
         </Card>
@@ -471,7 +525,9 @@ function Jogos() {
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Add On</Form.Label>
-              <Form.Control
+              
+              
+    <Form.Control
                 type="text"
                 pattern="\d*"
                 placeholder="Add On"
