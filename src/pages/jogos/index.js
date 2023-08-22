@@ -19,7 +19,7 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import { ToastContainer, toast } from 'react-toastify';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import InputGroup from 'react-bootstrap/InputGroup';
 import "react-toastify/dist/ReactToastify.css";
 
 function Jogos() {
@@ -33,8 +33,8 @@ function Jogos() {
   const [botao, setBotao] = useState("Cadastrar");
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [senha, setSenha] = useState("");
-  
   
   const [idJogadorJogo, setIdJogadorJogo] = useState("");
   const [buyin, setBuyin] = useState("");
@@ -42,10 +42,6 @@ function Jogos() {
   const [addon, setAddon] = useState("");
   const [nome, setNome] = useState("");
   const [dataAtual, setDataAtual] = useState("");
-
-
-
-
 
   const[nomeJogador, setNomeJogador] = useState("");
   const[buyinJogador, setBuyinJogador] = useState("");
@@ -57,8 +53,6 @@ function Jogos() {
   const [jogoAtualInicio, setJogoAtualInicio] = useState("");
   const [jogoAtualFim, setJogoAtualFim] = useState("");
   const [jogoAtualSequencia, setJogoAtualSequencia] = useState("");
-
-
 
   const handleClose = () => {
     setShow(false);
@@ -83,6 +77,7 @@ function Jogos() {
   };
   const handleShow2 = () => setShow2(true);
 
+  
   useEffect(() => {
     async function loadJogos() {
       const unsub = onSnapshot(collection(db, "jogos"), (snapshot2) => {
@@ -95,33 +90,61 @@ function Jogos() {
             fim: doc.data().fim,
           });
         });
-        
+        //ordena por sequencia
         lista2.sort(function (a, b) { return b.sequencia - a.sequencia });
+        //pega o jogo de maior sequencia
         const jogo = lista2[0];
+        setJogos(lista2);
+        //busca jogadores do ranking para adicionar no jogo posteriormente
         buscarJogadores();
-        
+        if(jogo.fim === "Em Andamento"){
+        setVisible(true);  
         jogadoresJogoBuscar(jogo);
         setJogoAtualSequencia(jogo.sequencia);
         setJogoAtual(jogo.id);
         setJogoAtualInicio(jogo.inicio);
         setJogoAtualFim(jogo.fim);
+      }else{
+        setVisible(false);
+      }
         
-        
-
-        setJogos(lista2);
+      
       });
     }
     loadJogos();
   }, []);
-  function montadata(){
+
+
+  function botaoAdd(par){
+    if(par === 1){
+      setBuyin(buyin + 1);
+    }
+    if(par === 2){
+      setRebuy(rebuy + 1);
+    }
+    if(par === 3) { 
+      setAddon(addon + 1);
+    } 
+    if(par === -1){
+      setBuyin(buyin - 1);
+    }
+    if(par === -2){
+      setRebuy(rebuy - 1);
+    }
+    if(par === -3) { 
+      setAddon(addon - 1);
+    } 
+  }
+   function montadata(){
     const date = new Date();
         const dia = date.getDate();
         const mes = date.getMonth() + 1;
         const ano = date.getFullYear();
         const h =date.getHours();
         const m =date.getMinutes();
-        const s =date.getSeconds();
-        setDataAtual(dia+"/"+mes+"/"+ano+" "+h+":"+m+":"+s);
+        const StringdataAtual = dia+"/"+mes+"/"+ano+" "+h+":"+m;
+        setDataAtual(StringdataAtual);
+        return StringdataAtual;
   }
   async function jogoAdd() {
     if (senha === "199605") {
@@ -130,10 +153,11 @@ function Jogos() {
         id: sequencia,
         sequencia: sequencia,
         inicio: dataAtual,
-        fim: 0,
+        fim: "Em Andamento",
       })
         .then(() => {
           setShow(false);
+          
           toast.success('Novo Jogo Iniciado, Bom jogo!', {
             position: "top-center",
             autoClose: 3000,
@@ -180,6 +204,34 @@ function Jogos() {
       setFim("");
     }
   }
+  async function eliminaJogador(id) {
+    if (senha === '199605') {
+       
+        //EDITAR PELO ID
+        const docRef = doc(db, "Jogos_Jogadores", id);
+        await updateDoc(docRef, {
+          ativo: false,
+        }).then(() => {
+        }).catch((error) => {
+          alert(error);
+        })
+        setShow2(false);
+    }else{
+      
+      toast.error('Senha incorreta', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+    }
+
+
+  }
   async function alteraJogadorJogo() {
     if (senha === '199605') {
        
@@ -218,17 +270,15 @@ function Jogos() {
   }
 
   async function finalizaJogo() {
-    montadata();
-    if (senha === '199605') {
-      
+      if(jogoAtual.length > 0){
+      const StringDataAtual = montadata();
         //EDITAR PELO ID
-        
         const docRef = doc(db, "jogos", jogoAtual);
-        console.log('data atuala'+dataAtual);
         await updateDoc(docRef, {
-          fim: dataAtual,
+          fim: StringDataAtual,
         }).then(() => {
-          toast.success('Jogo finalizado com sucesso!', {
+          
+          toast.success('Jogo finalizado com sucesso' , {
             position: "top-center",
             autoClose: 3000,
             hideProgressBar: false,
@@ -242,29 +292,23 @@ function Jogos() {
         }).catch((error) => {
           alert(error);
         })
-
         setJogoAtual("");
         setJogoAtualInicio("");
         setJogoAtualFim("");
         setJogoAtualSequencia("");
         setJogadoresJogo([]);
-      
-    }else{
-      
-      
-      toast.error('Senha incorreta', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
-    }
-
-
+      }else{
+        toast.error('Nenhum jogo para Finalizar.', {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });
+      }
   }
 
 
@@ -278,6 +322,8 @@ function Jogos() {
           rebuy: 0,
           addon: 0,
           idJogo: id_jogo,
+          ativo: true,
+          posicao:0,
         })
           .then(() => {
           })
@@ -290,7 +336,7 @@ function Jogos() {
       const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
         let lista2 = [];
         snapshot2.forEach((doc) => {
-          if(doc.data().idJogo === jogo.sequencia){
+          if(doc.data().idJogo === jogo.sequencia && doc.data().ativo === true){
             lista2.push({
               id: doc.id,
               nome: doc.data().nome,
@@ -329,16 +375,19 @@ function Jogos() {
     setAddon(addon);
     setNome(nome);
   }
-
   return (
     <div className="App">
+      
       <Container>
-        <br></br>
-        <Card>
-          <Card.Header><Badge bg="success">Jogo em Andamento - {jogoAtualSequencia}</Badge>  {" "}<Badge bg="primary">Inicio - {jogoAtualInicio}</Badge>
+      
+        
+        {visible && 
+        
+        <Card className="mt-4">
+          <Card.Header><Badge bg="danger"> ⚪ LIVE</Badge>{" "}<Badge bg="success">Jogo em Andamento - {jogoAtualSequencia}</Badge>  {" "}<Badge bg="primary">Inicio - {jogoAtualInicio}</Badge>{" "}
           </Card.Header>
           <Card.Body>
-            <Card.Title>Jogadores </Card.Title>
+            <Card.Title>Jogadores  </Card.Title>
             <Table striped bordered hover>
               <thead>
                 <tr>
@@ -346,23 +395,23 @@ function Jogos() {
                   <th>Bi</th>
                   <th>Rb</th>
                   <th>Ao</th>
-
                   <th>Ação</th>
                 </tr>
               </thead>
               <tbody>
                 {jogadoresJogo.map((jogadoresJogo) => {
                   return (
-                    <tr key={jogadoresJogo.id}>
+                    <tr key={jogadoresJogo.id} >
                       <td >{jogadoresJogo.nome}  </td>
                       <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="success" className="w-100">{jogadoresJogo.buyin}</Badge>   </td>
                       <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="warning" className="w-100">{jogadoresJogo.rebuy} </Badge> </td>
                       <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="danger" className="w-100">{jogadoresJogo.addon} </Badge>  </td>
                       <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                        <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarJogadorJogo(jogadoresJogo.id, jogadoresJogo.buyin, jogadoresJogo.rebuy,jogadoresJogo.addon,jogadoresJogo.nome)}>
+                        
+                        <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarJogadorJogo(jogadoresJogo.id, jogadoresJogo.buyin, jogadoresJogo.rebuy,jogadoresJogo.addon,jogadoresJogo.nome)} >
                           Editar
                         </Button>
-                         
+                        
                       </td>
                     </tr>
                   );
@@ -371,24 +420,18 @@ function Jogos() {
             </Table>
 
             <Button as="a" size="sm" variant="primary" onClick={finalizaJogo}>Finalizar Jogo</Button>
-
           </Card.Body>
         </Card>
-
+        }
+        
+        
         <br></br>
-
-
-        <br></br>
-
-
         <Card>
           <Card.Header><Badge bg="primary">Finalizados</Badge>
           
           </Card.Header>
           <Card.Body>
             <Card.Title>Jogos Finalizados </Card.Title>
-          
-        
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -403,11 +446,9 @@ function Jogos() {
             {jogos.map((jogos) => {
               return (
                 <tr key={jogos.id}>
-
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogos.sequencia} </td>
                   <td>{jogos.inicio} </td>
                   <td>{jogos.fim} </td>
-
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     <Button as="a" variant="primary" size="sm" className="w-100">
                       Detalhes
@@ -489,6 +530,8 @@ function Jogos() {
       <Modal show={show2} onHide={handleClose2}>
         <Modal.Header closeButton>
           <Modal.Title>{nome}</Modal.Title>
+          
+                        
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -503,38 +546,42 @@ function Jogos() {
               />
             </Form.Group>
             
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Buy In</Form.Label>
-              <Form.Control
-                type="text"
+            
+
+        <Form.Label>Buy In</Form.Label>
+        <InputGroup className="mb-3">
+        <Button variant="outline-danger" id="button-addon1" onClick={() => botaoAdd(-1)}>-</Button>
+        <Form.Control type="text"
                 pattern="\d*"
                 placeholder="Buy In"
                 value={buyin}
-                onChange={(e) => setBuyin(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-              <Form.Label>Rebuy</Form.Label>
-              <Form.Control
-                type="text"
+                onChange={(e) => setBuyin(e.target.value)}/>
+        <Button variant="outline-success" id="button-addon1"onClick={() => botaoAdd(1)} >+</Button>
+      </InputGroup>
+      <Form.Label>Rebuy</Form.Label>
+        <InputGroup className="mb-3">
+        <Button variant="outline-danger" id="button-addon1"onClick={() => botaoAdd(-2)} >-</Button>
+        <Form.Control type="text"
                 pattern="\d*"
                 placeholder="Rebuy"
                 value={rebuy}
-                onChange={(e) => setRebuy(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-              <Form.Label>Add On</Form.Label>
-              
-              
-    <Form.Control
-                type="text"
+                onChange={(e) => setRebuy(e.target.value)}/>
+        <Button variant="outline-success" id="button-addon1" onClick={() => botaoAdd(2)} >+</Button>
+      </InputGroup>
+      <Form.Label>Rebuy</Form.Label>
+        <InputGroup className="mb-3">
+        <Button variant="outline-danger" id="button-addon2"  onClick={() => botaoAdd(-3)}>-</Button>
+        <Form.Control type="text"
                 pattern="\d*"
                 placeholder="Add On"
                 value={addon}
-                onChange={(e) => setAddon(e.target.value)}
-              />
-            </Form.Group>
+                onChange={(e) => setAddon(e.target.value)}/>
+        <Button variant="outline-success" id="button-addon3" onClick={() => botaoAdd(3)}>+</Button>
+      </InputGroup>
+
+
+            
+           
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Senha</Form.Label>
               <Form.Control type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
@@ -542,6 +589,9 @@ function Jogos() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
+        <Button as="a" variant="danger"  onClick={() => eliminaJogador(idJogadorJogo)} >
+                          Sair do jogo
+                        </Button>
           <Button variant="secondary" onClick={handleClose2}>
             Fechar
           </Button>
