@@ -26,6 +26,7 @@ function Jogos() {
   const [jogos, setJogos] = useState([]);
   const [jogadores, setJogadores] = useState([]);
   const [jogadoresJogo, setJogadoresJogo] = useState([]);
+  const [jogadoresJogoInativos, setJogadoresJogoInativos] = useState([]);
   const [sequencia, setSequencia] = useState("");
   const [fim, setFim] = useState("");
   const [inicio, setInicio] = useState("");
@@ -204,17 +205,47 @@ function Jogos() {
       setFim("");
     }
   }
-  async function eliminaJogador(id) {
+  async function eliminaJogador(id,buyin) {
+   
     if (senha === '199605') {
-       
-        //EDITAR PELO ID
+      if(buyin < 1){
+        const docRef = doc(db, "Jogos_Jogadores", id);
+          await updateDoc(docRef, {
+            ativo: false,
+            posicao: 0,
+            pontos: 0,
+          }).then(() => {
+          }).catch((error) => {
+            alert(error);
+          })
+      }else{
+        //calculo de pontos
+        let posicao = jogadoresJogo.length;
+        let pontos = 0;
+        if (posicao > 5){
+          pontos = 1;
+        }else if(posicao === 5){
+          pontos = 2;
+        }else if(posicao === 4){
+          pontos = 4;
+        }else if(posicao === 3){
+          pontos = 6;
+        }else if(posicao === 2){
+          pontos = 8;
+        }else if(posicao === 1){
+          pontos = 10;
+        }
+        //calculo de pontos
         const docRef = doc(db, "Jogos_Jogadores", id);
         await updateDoc(docRef, {
           ativo: false,
+          posicao: jogadoresJogo.length,
+          pontos: pontos,
         }).then(() => {
         }).catch((error) => {
           alert(error);
         })
+      }
         setShow2(false);
     }else{
       
@@ -234,8 +265,6 @@ function Jogos() {
   }
   async function alteraJogadorJogo() {
     if (senha === '199605') {
-       
-        //EDITAR PELO ID
         const docRef = doc(db, "Jogos_Jogadores", idJogadorJogo);
         await updateDoc(docRef, {
           buyin: buyin,
@@ -268,16 +297,51 @@ function Jogos() {
 
 
   }
+  async function consultaPost(id){
+    const postRef = doc(db,"posts", id);
+    let pontos = 0;
+        await getDoc(postRef)
+          .then((snapshot) => {
+             pontos = snapshot.data().autor
+          })
+          .catch((error) => {
+            console.log("Erro ao buscar post" + error)
+          })
+          return pontos;
+  }
+
+   async function editarPost(id,pontos){
+    const docRef = doc(db, "posts", id);
+        await updateDoc(docRef, {
+          autor: pontos,
+        }).then(() => {
+          console.log("psot atualizxado")
+        }).catch((error) => {
+          console.log("erro ao atualizar post")
+        })
+  }
 
   async function finalizaJogo() {
       if(jogoAtual.length > 0){
-      const StringDataAtual = montadata();
+        if(jogadoresJogo.length > 1){
+          toast.error('Ainda há jogadores no Jogo.', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+            });
+      }else{
+        const StringDataAtual = montadata();
         //EDITAR PELO ID
         const docRef = doc(db, "jogos", jogoAtual);
         await updateDoc(docRef, {
           fim: StringDataAtual,
         }).then(() => {
-          
+
           toast.success('Jogo finalizado com sucesso' , {
             position: "top-center",
             autoClose: 3000,
@@ -297,6 +361,9 @@ function Jogos() {
         setJogoAtualFim("");
         setJogoAtualSequencia("");
         setJogadoresJogo([]);
+        setJogadoresJogoInativos([]);
+        
+      }
       }else{
         toast.error('Nenhum jogo para Finalizar.', {
           position: "top-center",
@@ -324,6 +391,8 @@ function Jogos() {
           idJogo: id_jogo,
           ativo: true,
           posicao:0,
+          pontos:0,
+          id_post: item.id,
         })
           .then(() => {
           })
@@ -335,6 +404,7 @@ function Jogos() {
   async function jogadoresJogoBuscar(jogo) {
       const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
         let lista2 = [];
+        let lista3 = [];
         snapshot2.forEach((doc) => {
           if(doc.data().idJogo === jogo.sequencia && doc.data().ativo === true){
             lista2.push({
@@ -345,8 +415,20 @@ function Jogos() {
               addon: doc.data().addon,
             });
           }
+          if(doc.data().idJogo === jogo.sequencia && doc.data().ativo === false && doc.data().buyin > 0){
+            lista3.push({
+              id: doc.id,
+              nome: doc.data().nome,
+              buyin: doc.data().buyin,
+              rebuy: doc.data().rebuy,
+              addon: doc.data().addon,
+              posicao:doc.data().posicao,
+              pontos:doc.data().pontos,
+            });
+          }
         });
         setJogadoresJogo(lista2);
+        setJogadoresJogoInativos(lista3);
     })
   }
   async function buscarJogadores() {
@@ -387,7 +469,7 @@ function Jogos() {
           <Card.Header><Badge bg="danger"> ⚪ LIVE</Badge>{" "}<Badge bg="success">Jogo em Andamento - {jogoAtualSequencia}</Badge>  {" "}<Badge bg="primary">Inicio - {jogoAtualInicio}</Badge>{" "}
           </Card.Header>
           <Card.Body>
-            <Card.Title>Jogadores  </Card.Title>
+            <Card.Title>Jogadores no Jogo  </Card.Title>
             <Table striped bordered hover>
               <thead>
                 <tr>
@@ -413,6 +495,33 @@ function Jogos() {
                         </Button>
                         
                       </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+            <Card.Title>Jogadores Eliminados  </Card.Title>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Bi</th>
+                  <th>Rb</th>
+                  <th>Ao</th>
+                  <th>Pontos</th>
+                  <th>Posição</th>
+                </tr>
+              </thead>
+              <tbody>
+                {jogadoresJogoInativos.map((jogadoresJogo) => {
+                  return (
+                    <tr key={jogadoresJogo.id} >
+                      <td >{jogadoresJogo.nome}  </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="dark" className="w-100">{jogadoresJogo.buyin}</Badge>   </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="dark" className="w-100">{jogadoresJogo.rebuy} </Badge> </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="dark" className="w-100">{jogadoresJogo.addon} </Badge>  </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">  {jogadoresJogo.pontos}</td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">  {jogadoresJogo.posicao}</td>
                     </tr>
                   );
                 })}
@@ -589,7 +698,7 @@ function Jogos() {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-        <Button as="a" variant="danger"  onClick={() => eliminaJogador(idJogadorJogo)} >
+        <Button as="a" variant="danger"  onClick={() => eliminaJogador(idJogadorJogo,buyin)} >
                           Sair do jogo
                         </Button>
           <Button variant="secondary" onClick={handleClose2}>
