@@ -21,8 +21,10 @@ import Badge from 'react-bootstrap/Badge';
 import { ToastContainer, toast } from 'react-toastify';
 import InputGroup from 'react-bootstrap/InputGroup';
 import "react-toastify/dist/ReactToastify.css";
+import JSConfetti from 'js-confetti'
 
 function Jogos() {
+  
   const [jogos, setJogos] = useState([]);
   const [jogadores, setJogadores] = useState([]);
   const [jogadoresJogo, setJogadoresJogo] = useState([]);
@@ -36,6 +38,9 @@ function Jogos() {
   const [show2, setShow2] = useState(false);
   const [visible, setVisible] = useState(false);
   const [senha, setSenha] = useState("");
+  const jsConfetti = new JSConfetti()
+
+
   
   const [idJogadorJogo, setIdJogadorJogo] = useState("");
   const [buyin, setBuyin] = useState("");
@@ -344,6 +349,7 @@ function Jogos() {
             theme: "dark",
             });
       }else{
+        jsConfetti.addConfetti();
         const StringDataAtual = montadata();
         //EDITAR PELO ID
         const docRef = doc(db, "jogos", jogoAtual);
