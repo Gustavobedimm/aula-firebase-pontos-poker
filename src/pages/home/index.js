@@ -200,7 +200,7 @@ function Home() {
             })}
           </tbody>
         </Table>
-        <Button as="a" size="sm" variant="success" onClick={handleShow}>Novo Jogador</Button> <Button as="a" size="sm" variant="success" onClick={goJogos}>Jogos</Button>
+        <Button as="a"   variant="success" onClick={handleShow}> 👨‍🚀 Novo Jogador</Button> <Button as="a"  variant="success" onClick={goJogos}> 🎲 Jogos</Button>
       </div>
       
 

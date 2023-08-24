@@ -22,6 +22,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import InputGroup from 'react-bootstrap/InputGroup';
 import "react-toastify/dist/ReactToastify.css";
 import JSConfetti from 'js-confetti'
+import { useNavigate } from "react-router-dom";
 
 function Jogos() {
   
@@ -38,7 +39,11 @@ function Jogos() {
   const [show2, setShow2] = useState(false);
   const [visible, setVisible] = useState(false);
   const [senha, setSenha] = useState("");
-  const jsConfetti = new JSConfetti()
+  const jsConfetti = new JSConfetti();
+  const navigate = useNavigate();
+  const goRanking = () => {
+    navigate("/")
+  };
 
 
   
@@ -176,7 +181,9 @@ function Jogos() {
       })
         .then(() => {
           setShow(false);
-          
+          jsConfetti.addConfetti({
+            confettiNumber: 600,
+          });
           toast.success('Novo Jogo Iniciado, Bom jogo!', {
             position: "top-center",
             autoClose: 3000,
@@ -349,7 +356,7 @@ function Jogos() {
             theme: "dark",
             });
       }else{
-        jsConfetti.addConfetti();
+        
         const StringDataAtual = montadata();
         //EDITAR PELO ID
         const docRef = doc(db, "jogos", jogoAtual);
@@ -367,6 +374,12 @@ function Jogos() {
             progress: undefined,
             theme: "dark",
             });
+
+            jsConfetti.addConfetti({
+              emojis: ['🏆','💵'],
+              emojiSize: 25,
+              confettiNumber: 100,
+            })
         
         }).catch((error) => {
           alert(error);
@@ -466,6 +479,7 @@ function Jogos() {
           }
         });
         setJogadoresJogo(lista2);
+        lista2.sort(function (a, b) { return b.posicao - a.posicao });
         setJogadoresJogoInativos(lista3);
     })
   }
@@ -504,7 +518,7 @@ function Jogos() {
         {visible && 
         
         <Card className="mt-4">
-          <Card.Header><Badge bg="danger"> ⚪ LIVE</Badge>{" "}<Badge bg="success">Jogo em Andamento - {jogoAtualSequencia}</Badge>  {" "}<Badge bg="primary">Inicio - {jogoAtualInicio}</Badge>{" "}
+          <Card.Header><Badge bg="danger"> 🔥 LIVE</Badge>{" "}<Badge bg="success">Jogo em Andamento - {jogoAtualSequencia}</Badge>  {" "}<Badge bg="primary">Inicio - {jogoAtualInicio}</Badge>{" "}
           </Card.Header>
           <Card.Body>
             <Card.Title>Jogadores no Jogo  </Card.Title>
@@ -519,22 +533,21 @@ function Jogos() {
                 </tr>
               </thead>
               <tbody>
-                {jogadoresJogo.map((jogadoresJogo) => {
+                {jogadoresJogo.map((jogadoresJogoTemp) => {
                   return (
-                    <tr key={jogadoresJogo.id} >
-                      <td >{jogadoresJogo.nome}  </td>
-                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="success" className="w-100">{jogadoresJogo.buyin}</Badge>   </td>
-                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="warning" className="w-100">{jogadoresJogo.rebuy} </Badge> </td>
-                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="danger" className="w-100">{jogadoresJogo.addon} </Badge>  </td>
+                    <tr key={jogadoresJogoTemp.id} >
+                      <td >{jogadoresJogoTemp.nome}  </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="success" className="w-100">{jogadoresJogoTemp.buyin}</Badge>   </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="warning" className="w-100">{jogadoresJogoTemp.rebuy} </Badge> </td>
+                      <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><Badge bg="danger" className="w-100">{jogadoresJogoTemp.addon} </Badge>  </td>
                       <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                        
-                        <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarJogadorJogo(jogadoresJogo.id, jogadoresJogo.buyin, jogadoresJogo.rebuy,jogadoresJogo.addon,jogadoresJogo.nome)} >
+                        <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarJogadorJogo(jogadoresJogoTemp.id, jogadoresJogoTemp.buyin, jogadoresJogoTemp.rebuy,jogadoresJogoTemp.addon,jogadoresJogoTemp.nome)} >
                           Editar
                         </Button>
-                        
                       </td>
                     </tr>
                   );
+                
                 })}
               </tbody>
             </Table>
@@ -566,7 +579,7 @@ function Jogos() {
               </tbody>
             </Table>
 
-            <Button as="a" size="sm" variant="primary" onClick={finalizaJogo}>Finalizar Jogo</Button>
+            <Button as="a" size="sm" variant="primary" onClick={finalizaJogo}> 🏁 Finalizar Jogo</Button>
           </Card.Body>
         </Card>
         }
@@ -611,10 +624,12 @@ function Jogos() {
           </tbody>
         </Table>
         <Button as="a" size="sm" variant="success" onClick={handleShow}>
-            Novo Jogo
+        🤑 Novo Jogo
           </Button>
         </Card.Body>
         </Card>
+        <br></br>
+        <Button as="a"  variant="success" onClick={goRanking}>🏆 Ranking</Button>
 
       </Container>
       <br></br>
