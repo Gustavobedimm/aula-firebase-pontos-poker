@@ -73,8 +73,21 @@ function Jogos() {
   
 
   const handleShow = () => {
+    if(jogoAtualFim === "Em Andamento"){
+      toast.warning('Ja existe um jogo em Andamento.', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
+    }else{
     montadata();
     setShow(true)
+  }
   };
   const handleShow2 = () => setShow2(true);
 
@@ -297,34 +310,30 @@ function Jogos() {
 
 
   }
-  async function consultaPost(id){
-    const postRef = doc(db,"posts", id);
-    let pontos = 0;
-        await getDoc(postRef)
-          .then((snapshot) => {
-             pontos = snapshot.data().autor
-          })
-          .catch((error) => {
-            console.log("Erro ao buscar post" + error)
-          })
-          return pontos;
+
+
+   async function editarPost(id,atual,novo){
+    const temp1 = parseInt(atual);
+    const temp2 = parseInt(novo);
+    let total = temp1 + temp2;
+    const docRef = doc(db, "posts", id);
+            await updateDoc(docRef, {
+          autor: total,
+        }).then(() => {
+          console.log("pontos atualizados")
+        }).catch((error) => {
+          console.log("erro ao atualizar pontos")
+        })
+    
   }
 
-   async function editarPost(id,pontos){
-    const docRef = doc(db, "posts", id);
-        await updateDoc(docRef, {
-          autor: pontos,
-        }).then(() => {
-          console.log("psot atualizxado")
-        }).catch((error) => {
-          console.log("erro ao atualizar post")
-        })
-  }
+  
 
   async function finalizaJogo() {
+    
       if(jogoAtual.length > 0){
         if(jogadoresJogo.length > 1){
-          toast.error('Ainda há jogadores no Jogo.', {
+          toast.error('Espere todos os jogadores sairem do Jogo atual.', {
             position: "top-center",
             autoClose: 3000,
             hideProgressBar: false,
@@ -344,7 +353,7 @@ function Jogos() {
 
           toast.success('Jogo finalizado com sucesso' , {
             position: "top-center",
-            autoClose: 3000,
+            autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -356,6 +365,27 @@ function Jogos() {
         }).catch((error) => {
           alert(error);
         })
+        
+        //atualizando pontos dos jogadores
+        jogadores.map((jogadorRankingTemp) => {
+          jogadoresJogoInativos.map((jogadorJogo) => {
+            if(jogadorRankingTemp.id === jogadorJogo.id_post){
+              editarPost(jogadorRankingTemp.id,jogadorRankingTemp.autor,jogadorJogo.pontos);
+            }
+          })
+        })
+        //atualizando pontos dos jogadores
+        toast.success('Ranking 🏆 Atualizado com sucesso.', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "dark",
+          });
+        
         setJogoAtual("");
         setJogoAtualInicio("");
         setJogoAtualFim("");
@@ -424,6 +454,8 @@ function Jogos() {
               addon: doc.data().addon,
               posicao:doc.data().posicao,
               pontos:doc.data().pontos,
+              id_post:doc.data().id_post,
+              
             });
           }
         });
@@ -548,7 +580,7 @@ function Jogos() {
               <th>Seq.</th>
               <th>Inicio</th>
               <th>Fim</th>
-              <th>Ação</th>
+              {/*<th>Ação</th>*/}
             </tr>
           </thead>
           <tbody>
@@ -558,11 +590,15 @@ function Jogos() {
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogos.sequencia} </td>
                   <td>{jogos.inicio} </td>
                   <td>{jogos.fim} </td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                  {/*<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                    
+      
+      
                     <Button as="a" variant="primary" size="sm" className="w-100">
                       Detalhes
                     </Button>
-                  </td>
+                    
+                  </td>*/}
                 </tr>
               );
             })}
