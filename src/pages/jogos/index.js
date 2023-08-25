@@ -96,7 +96,7 @@ function Jogos() {
         });
     }else{
     montadata();
-    setShow(true)
+    setShow(true);
   }
   };
   const handleShow2 = () => setShow2(true);
@@ -362,7 +362,7 @@ function Jogos() {
         jogadores.map((jogadorRankingTemp) => {
           jogadoresJogoInativos.map((jogadorJogo) => {
             if(jogadorRankingTemp.id === jogadorJogo.id_post){
-              //editarPost(jogadorRankingTemp.id,jogadorRankingTemp.autor,jogadorJogo.pontos);
+              editarPost(jogadorRankingTemp.id,jogadorRankingTemp.autor,jogadorJogo.pontos);
             }
           })
         })
@@ -618,7 +618,7 @@ function Jogos() {
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Senha</Form.Label>
-              <Form.Control type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
+              <Form.Control type="password"   pattern="\d*" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -671,7 +671,7 @@ function Jogos() {
       </InputGroup>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Senha</Form.Label>
-              <Form.Control type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
+              <Form.Control type="password"  pattern="\d*" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
             </Form.Group>
           </Form>
         </Modal.Body>
