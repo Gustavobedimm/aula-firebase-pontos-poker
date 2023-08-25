@@ -159,7 +159,7 @@ function Jogos() {
       setAddon(addon - 1);
     } 
   }
-   function montadata(){
+  function montadata(){
     const date = new Date();
         const dia = date.getDate();
         const mes = date.getMonth() + 1;
@@ -184,17 +184,6 @@ function Jogos() {
           jsConfetti.addConfetti({
             confettiNumber: 600,
           });
-          toast.success('Novo Jogo Iniciado, Bom jogo!', {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            });
-          
           setIdJogo("");
           setSequencia("");
           setInicio("");
@@ -231,7 +220,6 @@ function Jogos() {
     }
   }
   async function eliminaJogador(id,buyin) {
-   
     if (senha === '199605') {
       if(buyin < 1){
         const docRef = doc(db, "Jogos_Jogadores", id);
@@ -363,18 +351,6 @@ function Jogos() {
         await updateDoc(docRef, {
           fim: StringDataAtual,
         }).then(() => {
-
-          toast.success('Jogo finalizado com sucesso' , {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            });
-
             jsConfetti.addConfetti({
               emojis: ['🏆','💵'],
               emojiSize: 25,
@@ -389,22 +365,10 @@ function Jogos() {
         jogadores.map((jogadorRankingTemp) => {
           jogadoresJogoInativos.map((jogadorJogo) => {
             if(jogadorRankingTemp.id === jogadorJogo.id_post){
-              editarPost(jogadorRankingTemp.id,jogadorRankingTemp.autor,jogadorJogo.pontos);
+              //editarPost(jogadorRankingTemp.id,jogadorRankingTemp.autor,jogadorJogo.pontos);
             }
           })
         })
-        //atualizando pontos dos jogadores
-        toast.success('Ranking 🏆 Atualizado com sucesso.', {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "dark",
-          });
-        
         setJogoAtual("");
         setJogoAtualInicio("");
         setJogoAtualFim("");
@@ -511,12 +475,9 @@ function Jogos() {
   }
   return (
     <div className="App">
-      
       <Container>
-      
-        
+        {/* CARD JOGO AO VIVO ---------------------------------------------------------------------------------- */}
         {visible && 
-        
         <Card className="mt-4">
           <Card.Header><Badge bg="danger"> 🔥 LIVE</Badge>{" "}<Badge bg="success">Jogo em Andamento - {jogoAtualSequencia}</Badge>  {" "}<Badge bg="primary">Inicio - {jogoAtualInicio}</Badge>{" "}
           </Card.Header>
@@ -583,23 +544,20 @@ function Jogos() {
           </Card.Body>
         </Card>
         }
-        
-        
         <br></br>
+
+        {/* CARD JOGOS ---------------------------------------------------------------------------------- */}
         <Card>
           <Card.Header><Badge bg="primary">Finalizados</Badge>
-          
           </Card.Header>
           <Card.Body>
             <Card.Title>Jogos Finalizados </Card.Title>
         <Table striped bordered hover>
           <thead>
             <tr>
-
               <th>Seq.</th>
               <th>Inicio</th>
               <th>Fim</th>
-              {/*<th>Ação</th>*/}
             </tr>
           </thead>
           <tbody>
@@ -609,23 +567,12 @@ function Jogos() {
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogos.sequencia} </td>
                   <td>{jogos.inicio} </td>
                   <td>{jogos.fim} </td>
-                  {/*<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                    
-      
-      
-                    <Button as="a" variant="primary" size="sm" className="w-100">
-                      Detalhes
-                    </Button>
-                    
-                  </td>*/}
                 </tr>
               );
             })}
           </tbody>
         </Table>
-        <Button as="a" size="sm" variant="success" onClick={handleShow}>
-        🤑 Novo Jogo
-          </Button>
+        <Button as="a" size="sm" variant="success" onClick={handleShow}>🤑 Novo Jogo</Button>
         </Card.Body>
         </Card>
         <br></br>
@@ -634,6 +581,7 @@ function Jogos() {
       </Container>
       <br></br>
 
+   {/* MODAl NOVO JOGO ---------------------------------------------------------------------------------- */}
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Jogo</Modal.Title>
@@ -686,34 +634,14 @@ function Jogos() {
           </Button>
         </Modal.Footer>
       </Modal>
-
-
-
       <br></br>
-
-
-
+ {/* MODAL EDITA JOGADOR ---------------------------------------------------------------------------------- */}
       <Modal show={show2} onHide={handleClose2}>
         <Modal.Header closeButton>
           <Modal.Title>{nome}</Modal.Title>
-          
-                        
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>ID Jogador</Form.Label>
-              <Form.Control
-                disabled="true"
-                type="text"
-                placeholder="ID do Jogador"
-                value={idJogadorJogo}
-                onChange={(e) => setIdJogadorJogo(e.target.value)}
-              />
-            </Form.Group>
-            
-            
-
         <Form.Label>Buy In</Form.Label>
         <InputGroup className="mb-3">
         <Button variant="outline-danger" id="button-addon1" onClick={() => botaoAdd(-1)}>-</Button>
@@ -744,10 +672,6 @@ function Jogos() {
                 onChange={(e) => setAddon(e.target.value)}/>
         <Button variant="outline-success" id="button-addon3" onClick={() => botaoAdd(3)}>+</Button>
       </InputGroup>
-
-
-            
-           
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Senha</Form.Label>
               <Form.Control type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
@@ -767,14 +691,6 @@ function Jogos() {
         </Modal.Footer>
       </Modal>
       <ToastContainer/>
-
-      
-
-
-
-
-
-
     </div>
   );
 }
