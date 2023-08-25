@@ -181,9 +181,6 @@ function Jogos() {
       })
         .then(() => {
           setShow(false);
-          jsConfetti.addConfetti({
-            confettiNumber: 600,
-          });
           setIdJogo("");
           setSequencia("");
           setInicio("");
@@ -353,7 +350,7 @@ function Jogos() {
         }).then(() => {
             jsConfetti.addConfetti({
               emojis: ['🏆','💵'],
-              emojiSize: 25,
+              emojiSize: 50,
               confettiNumber: 100,
             })
         
