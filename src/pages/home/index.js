@@ -6,16 +6,22 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
+import Badge from 'react-bootstrap/Badge';
 import userEvent from "@testing-library/user-event";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [posts, setPosts] = useState([]);
+  const [jogosJogador, setJogosJogador] = useState([]);
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
   const [idPost, setIdPost] = useState("");
+  const [perfilNome, setPerfilNome] = useState("");
+  const [perfilPosicaoAtual, setPerfilPosicaoAtual] = useState("");
+  const [perfilPontos, setPerfilPontos] = useState("");
   const [botao, setBotao] = useState("Cadastrar");
   const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
   const navigate = useNavigate();
   const goJogos = () => {
     navigate("/jogos")
@@ -27,7 +33,11 @@ function Home() {
     setTitulo("")
 
   };
+  const handleClose2 = () => {
+    setShow2(false)
+  };
   const handleShow = () => setShow(true);
+  const handleShow2 = () => setShow2(true);
   const [senha, setSenha] = useState("");
 
   useEffect(() => {
@@ -73,6 +83,31 @@ function Home() {
   //    console.log("erro ao atualizar post")
   //  })
   // }
+  async function abrePerfil(id,nome,pontos,posicaoAtual){
+    setShow2(true);
+    setPerfilNome(nome);
+    setPerfilPontos(pontos);
+    setPerfilPosicaoAtual(posicaoAtual);
+    const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
+      let lista = [];
+      snapshot2.forEach((doc) => {
+        if(id === doc.data().id_post){
+          lista.push({
+            id: doc.id,
+            nome: doc.data().nome,
+            buyin: doc.data().buyin,
+            rebuy: doc.data().rebuy,
+            addon: doc.data().addon,
+            pontos: doc.data().pontos,
+            posicao: doc.data().posicao,
+            idJogo: doc.data().idJogo,
+          });
+        }
+      });
+    
+      setJogosJogador(lista);
+  })
+  }
   async function editarPostAcao(id, autor, titulo) {
     setShow(true);
     setIdPost(id);
@@ -193,7 +228,8 @@ function Home() {
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>*/}
 
-                    <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarPostAcao(post.id, post.autor, post.titulo)}>Editar</Button></td>
+                    {/*<Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarPostAcao(post.id, post.autor, post.titulo)}>Editar</Button></td>*/}
+                    <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => abrePerfil(post.id,post.titulo,post.autor,index+1)}>Perfil</Button></td>
                 </tr>
 
               )
@@ -224,6 +260,7 @@ function Home() {
     </Container>*/}
     
       <br></br>
+      
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Jogador</Modal.Title>
@@ -247,7 +284,6 @@ function Home() {
               <Form.Control type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
             </Form.Group>
           </Form>
-
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -256,6 +292,42 @@ function Home() {
           <Button variant="primary"  onClick={handleAdd}>
             {botao}
           </Button>
+        </Modal.Footer>
+      </Modal>
+      {/*MODAL PERFIL DE USUARIO*/}
+      <Modal show={show2} onHide={handleClose2} size="lg" fullscreen={true}>
+        <Modal.Header closeButton>
+          <Modal.Title> {perfilNome} </Modal.Title>
+          <Badge bg="success">{perfilPosicaoAtual}° Lugar</Badge><Badge bg="primary">{perfilPontos} Pontos Totais </Badge>
+        </Modal.Header>
+        <Modal.Body>
+        <h4>Ultimos Jogos</h4>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Jogo</th>
+              <th>Posição</th>
+              <th>Pontos</th>
+            </tr>
+          </thead>
+          <tbody>
+            {jogosJogador.map((jogo,index) => {
+              return (
+                <tr key={jogo.idJogo}>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.idJogo}</td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.posicao}</td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.pontos} </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose2}>
+            Fechar
+          </Button>
+          
         </Modal.Footer>
       </Modal>
     </div>
