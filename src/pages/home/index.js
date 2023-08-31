@@ -19,6 +19,8 @@ function Home() {
   const [perfilNome, setPerfilNome] = useState("");
   const [perfilPosicaoAtual, setPerfilPosicaoAtual] = useState("");
   const [perfilPontos, setPerfilPontos] = useState("");
+  const [perfilTitulos, setPerfilTitulos] = useState("");
+
   const [botao, setBotao] = useState("Cadastrar");
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
@@ -49,6 +51,7 @@ function Home() {
             id: doc.id,
             titulo: doc.data().titulo,
             autor: doc.data().autor,
+            titulos: doc.data().titulos,
           })
         })
         lista2.sort(function (a, b) { return b.autor - a.autor });
@@ -83,11 +86,12 @@ function Home() {
   //    console.log("erro ao atualizar post")
   //  })
   // }
-  async function abrePerfil(id,nome,pontos,posicaoAtual){
+  async function abrePerfil(id,nome,pontos,posicaoAtual,titulos){
     setShow2(true);
     setPerfilNome(nome);
     setPerfilPontos(pontos);
     setPerfilPosicaoAtual(posicaoAtual);
+    setPerfilTitulos(titulos);
     const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
       let lista = [];
       snapshot2.forEach((doc) => {
@@ -229,7 +233,7 @@ function Home() {
                     {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>*/}
 
                     {/*<Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarPostAcao(post.id, post.autor, post.titulo)}>Editar</Button></td>*/}
-                    <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => abrePerfil(post.id,post.titulo,post.autor,index+1)}>Perfil</Button></td>
+                    <Button as="a" variant="outline-primary" size="sm" className="w-100" onClick={() => abrePerfil(post.id,post.titulo,post.autor,index+1,post.titulos)}>Perfil</Button></td>
                 </tr>
 
               )
@@ -298,32 +302,59 @@ function Home() {
       <Modal show={show2} onHide={handleClose2} size="lg" fullscreen={true}>
         <Modal.Header closeButton>
           <Modal.Title> {perfilNome} </Modal.Title>
-          <Badge bg="success">{perfilPosicaoAtual}° Lugar</Badge><Badge bg="primary">{perfilPontos} Pontos Totais </Badge>
+          
         </Modal.Header>
         <Modal.Body>
-        <h4>Ultimos Jogos</h4>
+        
+        <Badge bg="success">{perfilPosicaoAtual}° Lugar Ranking</Badge><Badge bg="primary">{perfilPontos} Pontos Totais </Badge>
+        <hr></hr>
+        <h5>Titulos : {perfilTitulos}</h5>
+        <hr></hr>
+        <h5>Historico dos ultimos jogos</h5>
         <Table striped bordered hover>
           <thead>
             <tr>
               <th>Jogo</th>
               <th>Posição</th>
               <th>Pontos</th>
+              <th>BI</th>
+              <th>RB</th>
+              <th>AD</th>
+
             </tr>
           </thead>
           <tbody>
             {jogosJogador.map((jogo,index) => {
+              if(jogo.posicao === 1 || jogo.posicao === 2){
+                return (
+                  <tr key={jogo.idJogo}>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" >{jogo.idJogo}</td>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style={{color: "green"}}><b>{jogo.posicao} </b>💰</td>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">+{jogo.pontos} </td>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.buyin} </td>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.rebuy} </td>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.addon} </td>
+                  </tr>
+                )
+              }else{
               return (
                 <tr key={jogo.idJogo}>
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.idJogo}</td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.posicao}</td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.pontos} </td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><b>{jogo.posicao}</b></td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">+{jogo.pontos} </td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.buyin} </td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.rebuy} </td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.addon} </td>
+
                 </tr>
               )
+            }
             })}
           </tbody>
         </Table>
         </Modal.Body>
         <Modal.Footer>
+          
           <Button variant="secondary" onClick={handleClose2}>
             Fechar
           </Button>
