@@ -9,6 +9,7 @@ import Modal from 'react-bootstrap/Modal';
 import Badge from 'react-bootstrap/Badge';
 import userEvent from "@testing-library/user-event";
 import { useNavigate } from "react-router-dom";
+import './index.css';
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -203,7 +204,7 @@ function Home() {
       <div className="container">
 
         <br></br>
-        <h2 style={{color: "white"}}>Ranking 🏆 </h2>
+        <h2 style={{color: "white"}} >Ranking 🏆 </h2>
         {/*
       <Button as="a" variant="success" onClick={editarPost}>Editar</Button>
       <hr></hr>
@@ -211,7 +212,7 @@ function Home() {
       <hr></hr>
       */}
 
-        <Table striped bordered hover>
+        <Table striped bordered hover >
           <thead>
             <tr>
               <th>Posição</th>
@@ -224,8 +225,8 @@ function Home() {
           <tbody>
             {posts.map((post,index) => {
               return (
-                <tr key={post.id}>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{index + 1}º </td>
+                <tr key={post.id}  >
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"  >{index + 1}º  </td>
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{post.autor}</td>
                   <td>{post.titulo} </td>
                   
@@ -233,7 +234,7 @@ function Home() {
                     {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>*/}
 
                     {/*<Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarPostAcao(post.id, post.autor, post.titulo)}>Editar</Button></td>*/}
-                    <Button as="a" variant="outline-primary" size="sm" className="w-100" onClick={() => abrePerfil(post.id,post.titulo,post.autor,index+1,post.titulos)}>Perfil</Button></td>
+                    <Button as="a" variant="outline-primary" size="sm" className="w-100"  onClick={() => abrePerfil(post.id,post.titulo,post.autor,index+1,post.titulos)}>Perfil</Button></td>
                 </tr>
 
               )

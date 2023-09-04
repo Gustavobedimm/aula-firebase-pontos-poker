@@ -38,7 +38,7 @@ function Jogos() {
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [senha, setSenha] = useState("");
+
   const jsConfetti = new JSConfetti();
   const navigate = useNavigate();
   const goRanking = () => {
@@ -171,7 +171,7 @@ function Jogos() {
         return StringdataAtual;
   }
   async function jogoAdd() {
-    if (senha === "199605") {
+    
       //CADASTRAR NOVO
       await addDoc(collection(db, "jogos"), {
         id: sequencia,
@@ -196,28 +196,10 @@ function Jogos() {
 
 
       setBotao("Cadastrar");
-    } else {
-      setShow(false);
-      
-      toast.error('Senha incorreta', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
-      
-      setIdJogo("");
-      setSequencia("");
-      setInicio("");
-      setFim("");
-    }
+    
   }
   async function eliminaJogador(id,buyin) {
-    if (senha === '199605') {
+    
       if(buyin < 1){
         const docRef = doc(db, "Jogos_Jogadores", id);
           await updateDoc(docRef, {
@@ -257,24 +239,12 @@ function Jogos() {
         })
       }
         setShow2(false);
-    }else{
-      
-      toast.error('Senha incorreta', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
-    }
+    
 
 
   }
   async function alteraJogadorJogo() {
-    if (senha === '199605') {
+    
         const docRef = doc(db, "Jogos_Jogadores", idJogadorJogo);
         await updateDoc(docRef, {
           buyin: buyin,
@@ -290,20 +260,7 @@ function Jogos() {
           alert(error);
         })
       
-    }else{
-      
-      setShow2(false);
-      toast.error('Senha incorreta', {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
-    }
+    
 
 
   }
@@ -616,10 +573,7 @@ function Jogos() {
                 onChange={(e) => setFim(e.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-              <Form.Label>Senha</Form.Label>
-              <Form.Control type="password"   pattern="\d*" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
-            </Form.Group>
+            
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -659,7 +613,7 @@ function Jogos() {
                 onChange={(e) => setRebuy(e.target.value)}/>
         <Button variant="outline-success" id="button-addon1" onClick={() => botaoAdd(2)} >+</Button>
       </InputGroup>
-      <Form.Label>Rebuy</Form.Label>
+      <Form.Label>Addon</Form.Label>
         <InputGroup className="mb-3">
         <Button variant="outline-danger" id="button-addon2"  onClick={() => botaoAdd(-3)}>-</Button>
         <Form.Control type="text"
@@ -669,10 +623,7 @@ function Jogos() {
                 onChange={(e) => setAddon(e.target.value)}/>
         <Button variant="outline-success" id="button-addon3" onClick={() => botaoAdd(3)}>+</Button>
       </InputGroup>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-              <Form.Label>Senha</Form.Label>
-              <Form.Control type="password"  pattern="\d*" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
-            </Form.Group>
+            
           </Form>
         </Modal.Body>
         <Modal.Footer>
