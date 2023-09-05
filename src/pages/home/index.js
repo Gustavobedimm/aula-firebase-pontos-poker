@@ -214,10 +214,10 @@ function Home() {
       <hr></hr>
       */}
 
-        <Table striped bordered hover >
+        <Table  bordered >
           <thead>
             <tr>
-              <th>Posição</th>
+              <th >Posição</th>
               <th>Pontos</th>
               <th>Nome</th>
               
@@ -227,8 +227,8 @@ function Home() {
           <tbody>
             {posts.map((post,index) => {
               return (
-                <tr key={post.id}  >
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"  >{index + 1}º  </td>
+                <tr key={post.id}>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 "  >{index + 1}º  </td>
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{post.autor}</td>
                   <td>{post.titulo} </td>
                   
@@ -314,7 +314,7 @@ function Home() {
         <h5>Titulos de {perfilNome}: {perfilTitulos}</h5>
         <hr></hr>
         <h5>Historico dos ultimos jogos</h5>
-        <Table striped bordered hover>
+        <Table  bordered >
           <thead>
             <tr>
               <th>Jogo</th>
@@ -332,9 +332,9 @@ function Home() {
 
                 return (
                   <tr key={jogo.idJogo}>
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" >{jogo.idJogo}</td>
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style={{color: "green"}}><b>{jogo.posicao} </b>💰</td>
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">+{jogo.pontos} </td>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" >#{jogo.idJogo}</td>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"> <Badge bg="success">{jogo.posicao} ° </Badge></td>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">+{jogo.pontos} Pts</td>
                     <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.buyin} </td>
                     <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.rebuy} </td>
                     <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.addon} </td>
@@ -343,9 +343,9 @@ function Home() {
               }else{
               return (
                 <tr key={jogo.idJogo}>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.idJogo}</td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><b>{jogo.posicao}</b></td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">+{jogo.pontos} </td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">#{jogo.idJogo}</td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><b>{jogo.posicao} °</b></td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">+{jogo.pontos} Pts </td>
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.buyin} </td>
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.rebuy} </td>
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.addon} </td>

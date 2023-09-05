@@ -435,7 +435,7 @@ function Jogos() {
             </Card.Header>
             <Card.Body>
               <Card.Title>Jogadores no Jogo 🤑 </Card.Title>
-              <Table striped bordered hover>
+              <Table  bordered >
                 <thead>
                   <tr>
                     <th>Nome</th>
@@ -518,7 +518,7 @@ function Jogos() {
                 </tbody>
               </Table>
               <Card.Title>Jogadores Eliminados 💀 </Card.Title>
-              <Table striped bordered hover>
+              <Table  bordered >
                 <thead>
                   <tr>
                     <th>Nome</th>
@@ -579,7 +579,7 @@ function Jogos() {
           </Card.Header>
           <Card.Body>
             <Card.Title>Jogos Finalizados</Card.Title>
-            <Table striped bordered hover>
+            <Table  bordered >
               <thead>
                 <tr>
                   <th>Seq.</th>
