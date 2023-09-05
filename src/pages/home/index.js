@@ -109,7 +109,9 @@ function Home() {
           });
         }
       });
-    
+      lista.sort(function (a, b) {
+        return b.idJogo - a.idJogo;
+      });
       setJogosJogador(lista);
   })
   }
@@ -309,7 +311,7 @@ function Home() {
         
         <Badge bg="success">{perfilPosicaoAtual}° Lugar Ranking</Badge><Badge bg="primary">{perfilPontos} Pontos Totais </Badge>
         <hr></hr>
-        <h5>Titulos : {perfilTitulos}</h5>
+        <h5>Titulos de {perfilNome}: {perfilTitulos}</h5>
         <hr></hr>
         <h5>Historico dos ultimos jogos</h5>
         <Table striped bordered hover>
@@ -327,6 +329,7 @@ function Home() {
           <tbody>
             {jogosJogador.map((jogo,index) => {
               if(jogo.posicao === 1 || jogo.posicao === 2){
+
                 return (
                   <tr key={jogo.idJogo}>
                     <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" >{jogo.idJogo}</td>
