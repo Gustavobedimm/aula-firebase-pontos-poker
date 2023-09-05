@@ -49,6 +49,9 @@ function Jogos() {
   const [buyin, setBuyin] = useState("");
   const [rebuy, setRebuy] = useState("");
   const [addon, setAddon] = useState("");
+  const [somaBuyin, setSomaBuyin] = useState("");
+  const [somaRebuy, setSomaRebuy] = useState("");
+  const [somaAddon, setSomaAddon] = useState("");
   const [nome, setNome] = useState("");
   const [dataAtual, setDataAtual] = useState("");
 
@@ -352,6 +355,9 @@ function Jogos() {
     const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
       let lista2 = [];
       let lista3 = [];
+      let somaBuyin = 0;
+      let somaRebuy = 0;
+      let somaAddon = 0;
       snapshot2.forEach((doc) => {
         if (doc.data().idJogo === jogo.sequencia && doc.data().ativo === true) {
           lista2.push({
@@ -361,6 +367,9 @@ function Jogos() {
             rebuy: doc.data().rebuy,
             addon: doc.data().addon,
           });
+          somaBuyin = somaBuyin + doc.data().buyin;
+          somaAddon = somaAddon + doc.data().addon;
+          somaRebuy = somaRebuy + doc.data().rebuy;
         }
         if (
           doc.data().idJogo === jogo.sequencia &&
@@ -377,7 +386,13 @@ function Jogos() {
             pontos: doc.data().pontos,
             id_post: doc.data().id_post,
           });
+          somaBuyin = somaBuyin + doc.data().buyin;
+          somaAddon = somaAddon + doc.data().addon;
+          somaRebuy = somaRebuy + doc.data().rebuy;
         }
+        setSomaBuyin(somaBuyin);
+        setSomaRebuy(somaRebuy);
+        setSomaAddon(somaAddon);
       });
       setJogadoresJogo(lista2);
       lista2.sort(function (a, b) {
@@ -531,8 +546,30 @@ function Jogos() {
                 </thead>
                 <tbody>
                   {jogadoresJogoInativos.map((jogadoresJogo) => {
+                    if(jogadoresJogoInativos.length < 1){
+                      return(
+                        <tr>
+                        <td>Nenhum</td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          0
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          0
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          0
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          0
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          0
+                        </td>
+                      </tr>
+                      );
+                    }else{
                     return (
-                      <tr key={jogadoresJogo.id}>
+                          <tr key={jogadoresJogo.id}>
                         <td>{jogadoresJogo.nome} </td>
                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                           <Badge bg="dark" className="w-100">
@@ -559,7 +596,37 @@ function Jogos() {
                         </td>
                       </tr>
                     );
+                  }
                   })}
+                </tbody>
+              </Table>
+              <Card.Title>Totais</Card.Title>
+              <Table  bordered >
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Bi</th>
+                    <th>Rb</th>
+                    <th>Ao</th>
+                    <th>Soma</th>
+                  </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                        <td>Total</td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {somaBuyin}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {somaRebuy}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {somaAddon}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {somaBuyin+somaRebuy+somaAddon}
+                        </td>
+                      </tr>
                 </tbody>
               </Table>
 
