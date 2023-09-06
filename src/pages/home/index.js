@@ -10,6 +10,7 @@ import Badge from 'react-bootstrap/Badge';
 import userEvent from "@testing-library/user-event";
 import { useNavigate } from "react-router-dom";
 import './index.css';
+import { render } from "@testing-library/react";
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -226,9 +227,16 @@ function Home() {
           </thead>
           <tbody>
             {posts.map((post,index) => {
+              
+                
               return (
                 <tr key={post.id}>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 "  >{index + 1}º  </td>
+                  {index > 2 ? (
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 "  >{index + 1}º  </td>
+                        ) : (
+                          <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 "  ><Badge bg="success">{index + 1}º</Badge></td>
+                        )}
+                  
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{post.autor}</td>
                   <td>{post.titulo} </td>
                   

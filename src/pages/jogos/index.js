@@ -609,11 +609,12 @@ function Jogos() {
                     <th>Rb</th>
                     <th>Ao</th>
                     <th>Soma</th>
+                    <th>Premiação</th>
                   </tr>
                 </thead>
                 <tbody>
                         <tr>
-                        <td>Total</td>
+                        <td><b>Total</b></td>
                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                           {somaBuyin}
                         </td>
@@ -625,6 +626,11 @@ function Jogos() {
                         </td>
                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                           {somaBuyin+somaRebuy+somaAddon}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                        <Badge bg="success" className="w-100">
+                            
+                          R$ {10 * (somaBuyin+somaRebuy+somaAddon)} </Badge>
                         </td>
                       </tr>
                 </tbody>
