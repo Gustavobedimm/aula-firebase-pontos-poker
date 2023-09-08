@@ -11,6 +11,22 @@ import userEvent from "@testing-library/user-event";
 import { useNavigate } from "react-router-dom";
 import './index.css';
 import { render } from "@testing-library/react";
+import { Chart } from "react-google-charts";
+
+export const data = [
+  ["Year", "Sales", "Expenses"],
+  ["2004", 1000, 400],
+  ["2005", 1170, 460],
+  ["2006", 660, 1120],
+  ["2007", 1030, 540],
+];
+
+export const options = {
+  title: "Company Performance",
+  curveType: "function",
+  legend: { position: "bottom" },
+};
+
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -251,6 +267,16 @@ function Home() {
             })}
           </tbody>
         </Table>
+        
+        <Chart
+      chartType="LineChart"
+      width="100%"
+      height="400px"
+      data={data}
+      options={options}
+    />
+        <br></br>
+
         <Button as="a"   variant="success" onClick={handleShow}> 👨‍🚀 Novo Jogador</Button> <Button as="a"  variant="success" onClick={goJogos}> 🎲 Jogos</Button>
       </div>
       
@@ -336,6 +362,7 @@ function Home() {
           </thead>
           <tbody>
             {jogosJogador.map((jogo,index) => {
+              if(jogo.buyin > 0){
               if(jogo.posicao === 1 || jogo.posicao === 2){
 
                 return (
@@ -361,9 +388,11 @@ function Home() {
                 </tr>
               )
             }
+          }
             })}
           </tbody>
         </Table>
+        
         </Modal.Body>
         <Modal.Footer>
           
