@@ -24,7 +24,7 @@ import img3 from '../../assets/medalha-de-bronze.png';
 export const options = {
   title: "Performace dos Jogadores",
   curveType: "function",
-  legend: { position: "bottom" },
+  //legend: { position: "bottom" },
   pointSize: 10
 };
 
@@ -132,10 +132,10 @@ function Home() {
         return a.idJogo - b.idJogo;
       });
       setJogosJogador(lista);
-      const temp = [["Year", nome]];
+      const temp = [["Year", "Pontos", "Rebuy"]];
       
       lista.map((jogadoresJogoTemp) => {
-         temp.push(["Jogo "+jogadoresJogoTemp.idJogo, jogadoresJogoTemp.pontos]);
+         temp.push(["Jogo "+jogadoresJogoTemp.idJogo, jogadoresJogoTemp.pontos,jogadoresJogoTemp.rebuy] );
        
       })
       setData(temp);
