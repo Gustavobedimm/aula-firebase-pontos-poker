@@ -12,24 +12,26 @@ import { useNavigate } from "react-router-dom";
 import './index.css';
 import { render } from "@testing-library/react";
 import { Chart } from "react-google-charts";
+import img1 from '../../assets/medalha-de-ouro.png';
+import img2 from '../../assets/medalha-de-prata.png';
+import img3 from '../../assets/medalha-de-bronze.png';
 
-export const data = [
-  ["Year", "Sales", "Expenses"],
-  ["2004", 1000, 400],
-  ["2005", 1170, 460],
-  ["2006", 660, 1120],
-  ["2007", 1030, 540],
-];
+//const data = [["Year", nome],
+//              ["asd1",10],
+//             ["asd21",10],
+//            ];
 
 export const options = {
-  title: "Company Performance",
+  title: "Performace dos Jogadores",
   curveType: "function",
   legend: { position: "bottom" },
+  pointSize: 10
 };
 
 
 function Home() {
   const [posts, setPosts] = useState([]);
+  const [data, setData] = useState([]);
   const [jogosJogador, setJogosJogador] = useState([]);
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
@@ -127,11 +129,22 @@ function Home() {
         }
       });
       lista.sort(function (a, b) {
-        return b.idJogo - a.idJogo;
+        return a.idJogo - b.idJogo;
       });
       setJogosJogador(lista);
+      const temp = [["Year", nome]];
+      
+      lista.map((jogadoresJogoTemp) => {
+         temp.push(["Jogo "+jogadoresJogoTemp.idJogo, jogadoresJogoTemp.pontos]);
+       
+      })
+      setData(temp);
+      
+      
+
+      
   })
-  }
+}
   async function editarPostAcao(id, autor, titulo) {
     setShow(true);
     setIdPost(id);
@@ -166,6 +179,17 @@ function Home() {
       .catch((error) => {
         console.log("deu algum erro ao buscar" + error)
       })
+  }
+  function TestaPosicao(posicao){
+    if(posicao === 1){
+      return(<img src={img1} className="img"/>);
+    }
+    if(posicao === 2){
+      return(<img src={img2} className="img"/>);
+    }
+    if(posicao === 3){
+      return(<img src={img3} className="img"/>);
+    }
   }
   async function handleAdd() {
     if (senha === '199605') {
@@ -250,7 +274,7 @@ function Home() {
                   {index > 2 ? (
                     <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 "  >{index + 1}º  </td>
                         ) : (
-                          <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 "  ><Badge bg="success">{index + 1}º</Badge></td>
+                          <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 "  >{TestaPosicao(index+1)}</td>
                         )}
                   
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{post.autor}</td>
@@ -268,13 +292,7 @@ function Home() {
           </tbody>
         </Table>
         
-        <Chart
-      chartType="LineChart"
-      width="100%"
-      height="400px"
-      data={data}
-      options={options}
-    />
+       
         <br></br>
 
         <Button as="a"   variant="success" onClick={handleShow}> 👨‍🚀 Novo Jogador</Button> <Button as="a"  variant="success" onClick={goJogos}> 🎲 Jogos</Button>
@@ -325,6 +343,7 @@ function Home() {
               <Form.Control type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
             </Form.Group>
           </Form>
+          
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -343,7 +362,7 @@ function Home() {
         </Modal.Header>
         <Modal.Body>
         
-        <Badge bg="success">{perfilPosicaoAtual}° Lugar Ranking</Badge><Badge bg="primary">{perfilPontos} Pontos Totais </Badge>
+        {TestaPosicao(perfilPosicaoAtual)} <Badge bg="primary">{perfilPontos} Pontos Totais </Badge>
         <hr></hr>
         <h5>Titulos de {perfilNome}: {perfilTitulos}</h5>
         <hr></hr>
@@ -392,6 +411,13 @@ function Home() {
             })}
           </tbody>
         </Table>
+        <Chart
+      chartType="LineChart"
+      width="100%"
+      height="400px"
+      data={data}
+      options={options}
+    />
         
         </Modal.Body>
         <Modal.Footer>
