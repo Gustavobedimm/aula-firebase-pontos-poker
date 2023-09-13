@@ -24,7 +24,7 @@ import img3 from '../../assets/medalha-de-bronze.png';
 export const options = {
   title: "Performace dos Jogadores",
   curveType: "function",
-  //legend: { position: "bottom" },
+  legend: { position: "bottom" },
   pointSize: 10
 };
 
@@ -115,7 +115,7 @@ function Home() {
     const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
       let lista = [];
       snapshot2.forEach((doc) => {
-        if(id === doc.data().id_post){
+        if(id === doc.data().id_post && doc.data().buyin > 0){
           lista.push({
             id: doc.id,
             nome: doc.data().nome,
@@ -132,13 +132,20 @@ function Home() {
         return a.idJogo - b.idJogo;
       });
       setJogosJogador(lista);
-      const temp = [["Year", "Pontos", "Rebuy"]];
+      if(lista.length > 0){
+
+      
+      const temp = [["Year", "Pontos", "Buyin+Rebuy+Addon"]];
       
       lista.map((jogadoresJogoTemp) => {
-         temp.push(["Jogo "+jogadoresJogoTemp.idJogo, jogadoresJogoTemp.pontos,jogadoresJogoTemp.rebuy] );
+         temp.push(["Jogo "+jogadoresJogoTemp.idJogo, jogadoresJogoTemp.pontos,jogadoresJogoTemp.rebuy+jogadoresJogoTemp.addon+jogadoresJogoTemp.buyin] );
        
       })
       setData(temp);
+    }else{
+      const temp = [["Year", "Pontos", "Buyin+Rebuy+Addon"],["Nenhum",0,0]];
+      setData(temp);
+    }
       
       
 
