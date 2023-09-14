@@ -22,10 +22,10 @@ import img3 from '../../assets/medalha-de-bronze.png';
 //            ];
 
 export const options = {
-  title: "Performace dos Jogadores",
-  curveType: "function",
+  title: "Performace do Jogador",
+  //curveType: "function",
   legend: { position: "bottom" },
-  pointSize: 10
+  pointSize: 5
 };
 
 
@@ -300,7 +300,7 @@ function Home() {
         </Table>
         
        
-        <br></br>
+        
 
         <Button as="a"   variant="success" onClick={handleShow}> 👨‍🚀 Novo Jogador</Button> <Button as="a"  variant="success" onClick={goJogos}> 🎲 Jogos</Button>
       </div>
