@@ -1,0 +1,25 @@
+.timer{
+    display: flex;
+    font-size: 55px;
+    font-weight: bold;
+    color: #333;
+}
+.timer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    min-width: 90px;
+}
+.buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn{
+    margin: 5px;
+}
+.separator{
+    padding: 0 10px;
+    color: #525763;
+}

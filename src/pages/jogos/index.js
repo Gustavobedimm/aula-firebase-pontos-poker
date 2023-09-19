@@ -44,6 +44,9 @@ function Jogos() {
   const goRanking = () => {
     navigate("/");
   };
+  const goTimer = () => {
+    navigate("/homegame");
+  };
 
   const [idJogadorJogo, setIdJogadorJogo] = useState("");
   const [buyin, setBuyin] = useState("");
@@ -682,6 +685,10 @@ function Jogos() {
         <br></br>
         <Button as="a" variant="success" onClick={goRanking}>
           🏆 Ranking
+        </Button>
+        <br></br>
+        <Button as="a" variant="success" onClick={goTimer}>
+          Timer
         </Button>
       </Container>
       <br></br>
