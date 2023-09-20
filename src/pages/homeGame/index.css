@@ -23,3 +23,26 @@
     padding: 0 10px;
     color: #525763;
 }
+.align{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.level{
+    display: flex;
+    font-size: 45px;
+    font-weight: bold;
+    color: #333;
+}
+.blind{
+    display: flex;
+    font-size: 45px;
+    font-weight: bold;
+    color: #333;
+}
+.nextLevel{
+    display: flex;
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+}
