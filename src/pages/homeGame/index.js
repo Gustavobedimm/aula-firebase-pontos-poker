@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import "./index.css";
+import ProgressBar from 'react-bootstrap/ProgressBar';
 import useSound from 'use-sound';
 import mySound from '../../assets/som.mp3' ;
 
@@ -126,7 +127,13 @@ function HomeGame() {
     
     setTimeout(() => {
       if (!isPaused) {
-        if (totalTime === 0 || reset === true || levelAtual === 1) {
+        if(reset){
+          setReset(false);
+          setTotalTime(15 * 60);
+          minutes = Math.floor(totalTime / 60);
+          seconds = totalTime % 60;
+        }else{
+        if (totalTime === 0 || levelAtual === 1) {
           for (const item of levels) {
             if(item.level === levelAtual.toString()){
               setLevelAtualTela(item.level);
@@ -135,15 +142,18 @@ function HomeGame() {
               setNextBlind(item.nextLevel);
             }
           }
+
           playSound();
-          setReset(false);
           setTotalTime(15 * 60);
           minutes = Math.floor(totalTime / 60);
           seconds = totalTime % 60;
+
         } else {
+          if (!isPaused) {
           setTotalTime(totalTime - 1);
+          }
         }
-      }
+      }}
     }, 1000);
   }, [totalTime]);
 
@@ -152,7 +162,7 @@ function HomeGame() {
   }
   function unpaused() {
     setIsPaused(false);
-    setTotalTime(totalTime + 1);
+    setTotalTime(totalTime - 1);
   }
   function reseted() {
     setReset(true);
@@ -170,7 +180,9 @@ function HomeGame() {
             <div className="time" id="seconds">
               {seconds.toString().padStart(2, "0")}
             </div>
+            
           </div>
+          
           <div className="buttons">
             <Button variant="success" className="btn" onClick={() => unpaused()}>
               Iniciar
@@ -182,6 +194,8 @@ function HomeGame() {
               Resetar
             </Button>
           </div>
+          <br></br>
+          <ProgressBar animated variant="success" now={totalTime} min={0} max={900} />
         </Card.Body>
       </Card>
       
@@ -196,6 +210,10 @@ function HomeGame() {
       </Row>
       <Row>
         <Col  className="align"><span className="nextLevel">Next Level - {nextBlind}</span></Col>
+      </Row>
+      <br></br>
+      <Row>
+        <Col  className="align"><Button variant="success" className="btn">- Nivel</Button><Button variant="success" className="btn">+Nivel</Button></Col>
       </Row>
     </Container>
       </Card.Body>
