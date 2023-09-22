@@ -686,9 +686,9 @@ function Jogos() {
         <Button as="a" variant="success" onClick={goRanking}>
           🏆 Ranking
         </Button>
-        <br></br>
+        
         <Button as="a" variant="success" onClick={goTimer}>
-          Timer
+        🕗 Timer
         </Button>
       </Container>
       <br></br>
