@@ -1,20 +1,31 @@
 import { useState, useEffect } from "react";
 import { db } from "../../firebaseConection";
-import { doc, setDoc, collection, addDoc, getDoc, onSnapshot, getDocs, updateDoc, deleteDoc } from "firebase/firestore";
-import { Button } from 'react-bootstrap';
-import Form from 'react-bootstrap/Form';
-import Container from 'react-bootstrap/Container';
-import Table from 'react-bootstrap/Table';
-import Modal from 'react-bootstrap/Modal';
-import Badge from 'react-bootstrap/Badge';
+import {
+  doc,
+  setDoc,
+  collection,
+  addDoc,
+  getDoc,
+  onSnapshot,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { Button } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
+import Container from "react-bootstrap/Container";
+import Table from "react-bootstrap/Table";
+import Modal from "react-bootstrap/Modal";
+import Badge from "react-bootstrap/Badge";
 import userEvent from "@testing-library/user-event";
 import { useNavigate } from "react-router-dom";
-import './index.css';
+import "./index.css";
 import { render } from "@testing-library/react";
 import { Chart } from "react-google-charts";
-import img1 from '../../assets/medalha-de-ouro.png';
-import img2 from '../../assets/medalha-de-prata.png';
-import img3 from '../../assets/medalha-de-bronze.png';
+import img1 from "../../assets/medalha-de-ouro.png";
+import img2 from "../../assets/medalha-de-prata.png";
+import img3 from "../../assets/medalha-de-bronze.png";
+import Card from "react-bootstrap/Card";
 
 //const data = [["Year", nome],
 //              ["asd1",10],
@@ -25,9 +36,8 @@ export const options = {
   title: "Performace do Jogador",
   //curveType: "function",
   legend: { position: "bottom" },
-  pointSize: 5
+  pointSize: 5,
 };
-
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -40,23 +50,26 @@ function Home() {
   const [perfilPosicaoAtual, setPerfilPosicaoAtual] = useState("");
   const [perfilPontos, setPerfilPontos] = useState("");
   const [perfilTitulos, setPerfilTitulos] = useState("");
+  const [mediaRebuy, setMediaRebuy] = useState("");
+  const [mediaAddOn, setMediaAddOn] = useState("");
+  const [winrate, setWinrate] = useState("");
+  const [mediaGasta, setMediaGasta] = useState("");
 
   const [botao, setBotao] = useState("Cadastrar");
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
   const navigate = useNavigate();
   const goJogos = () => {
-    navigate("/jogos")
-  }
+    navigate("/jogos");
+  };
   const handleClose = () => {
-    setShow(false)
-    setIdPost("")
-    setAutor("")
-    setTitulo("")
-
+    setShow(false);
+    setIdPost("");
+    setAutor("");
+    setTitulo("");
   };
   const handleClose2 = () => {
-    setShow2(false)
+    setShow2(false);
   };
   const handleShow = () => setShow(true);
   const handleShow2 = () => setShow2(true);
@@ -72,25 +85,24 @@ function Home() {
             titulo: doc.data().titulo,
             autor: doc.data().autor,
             titulos: doc.data().titulos,
-          })
-        })
-        lista2.sort(function (a, b) { return b.autor - a.autor });
+          });
+        });
+        lista2.sort(function (a, b) {
+          return b.autor - a.autor;
+        });
         setPosts(lista2);
-      })
+      });
     }
     loadPosts();
-
-  }, [])
+  }, []);
 
   async function excluirPost(id) {
-    const docRef = doc(db, "posts", id)
+    const docRef = doc(db, "posts", id);
     await deleteDoc(docRef)
       .then(() => {
-        console.log('post excluido com sucesso')
+        console.log("post excluido com sucesso");
       })
-      .catch(() => {
-
-      })
+      .catch(() => {});
   }
   //async function editarPost(){
   //  const docRef = doc(db, "posts" , idPost);
@@ -106,7 +118,7 @@ function Home() {
   //    console.log("erro ao atualizar post")
   //  })
   // }
-  async function abrePerfil(id,nome,pontos,posicaoAtual,titulos){
+  async function abrePerfil(id, nome, pontos, posicaoAtual, titulos) {
     setShow2(true);
     setPerfilNome(nome);
     setPerfilPontos(pontos);
@@ -115,7 +127,7 @@ function Home() {
     const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
       let lista = [];
       snapshot2.forEach((doc) => {
-        if(id === doc.data().id_post && doc.data().buyin > 0){
+        if (id === doc.data().id_post && doc.data().buyin > 0) {
           lista.push({
             id: doc.id,
             nome: doc.data().nome,
@@ -132,32 +144,35 @@ function Home() {
         return a.idJogo - b.idJogo;
       });
       setJogosJogador(lista);
-      if(lista.length > 0){
+      if (lista.length > 0) {
+        const temp = [["Year", "Pontos", "Buyin+Rebuy+Addon"]];
 
-      
-      const temp = [["Year", "Pontos", "Buyin+Rebuy+Addon"]];
-      
-      lista.map((jogadoresJogoTemp) => {
-         temp.push(["Jogo "+jogadoresJogoTemp.idJogo, jogadoresJogoTemp.pontos,jogadoresJogoTemp.rebuy+jogadoresJogoTemp.addon+jogadoresJogoTemp.buyin] );
-       
-      })
-      setData(temp);
-    }else{
-      const temp = [["Year", "Pontos", "Buyin+Rebuy+Addon"],["Nenhum",0,0]];
-      setData(temp);
-    }
-      
-      
-
-      
-  })
-}
+        lista.map((jogadoresJogoTemp) => {
+          temp.push([
+            "Jogo " + jogadoresJogoTemp.idJogo,
+            jogadoresJogoTemp.pontos,
+            jogadoresJogoTemp.rebuy +
+              jogadoresJogoTemp.addon +
+              jogadoresJogoTemp.buyin,
+          ]);
+        });
+        setData(temp);
+      } else {
+        const temp = [
+          ["Year", "Pontos", "Buyin+Rebuy+Addon"],
+          ["Nenhum", 0, 0],
+        ];
+        setData(temp);
+      }
+      montaMedia(lista);
+    });
+  }
   async function editarPostAcao(id, autor, titulo) {
     setShow(true);
     setIdPost(id);
     setAutor(autor);
     setTitulo(titulo);
-    setBotao("Editar")
+    setBotao("Editar");
   }
   async function buscarPost() {
     //consulta post pelo ID especifico
@@ -170,7 +185,7 @@ function Home() {
     //.catch((error) => {
     //  console.log("Erro ao buscar post" + error)
     //})
-    const postsRef = collection(db, "posts")
+    const postsRef = collection(db, "posts");
     await getDocs(postsRef)
       .then((snapshot) => {
         let lista = [];
@@ -179,132 +194,175 @@ function Home() {
             id: doc.id,
             titulo: doc.data().titulo,
             autor: doc.data().autor,
-          })
-        })
+          });
+        });
         setPosts(lista);
       })
       .catch((error) => {
-        console.log("deu algum erro ao buscar" + error)
-      })
+        console.log("deu algum erro ao buscar" + error);
+      });
   }
-  function TestaPosicao(posicao){
-    if(posicao === 1){
-      return(<img src={img1} className="img"/>);
+  function montaMedia(jogos) {
+    let tempmediaRebuy = 0;
+    let tempmediaAddOn = 0;
+    let tempbuyin = 0;
+    let tempwinrate = 0;
+    let tamanho = jogos.length;
+    for (const item of jogos) {
+      tempmediaRebuy = tempmediaRebuy + item.rebuy;
+      tempmediaAddOn = tempmediaAddOn + item.addon;
+      tempbuyin = tempbuyin + item.buyin;
+      if (item.posicao < 2) {
+        tempwinrate = tempwinrate + 1;
+      }
     }
-    if(posicao === 2){
-      return(<img src={img2} className="img"/>);
+    let tempMediaGasta = ((tempmediaRebuy+tempmediaAddOn+tempbuyin) * 10) / tamanho;
+    setMediaGasta(tempMediaGasta.toFixed(2));
+    let temp1 = tempmediaRebuy / tamanho;
+    let temp2 = tempmediaAddOn / tamanho;
+    let temp3 = 0;
+    setMediaRebuy(temp1.toFixed(2));
+    setMediaAddOn(temp2.toFixed(2));
+    if (tempwinrate > 0) {
+      temp3 = (tempwinrate * 100) / tamanho;
+       setWinrate(temp3.toFixed(2));
+    } else {
+      setWinrate(0);
     }
-    if(posicao === 3){
-      return(<img src={img3} className="img"/>);
+  }
+  function TestaPosicao(posicao) {
+    if (posicao === 1) {
+      return <img src={img1} className="img" />;
     }
+    if (posicao === 2) {
+      return <img src={img2} className="img" />;
+    }
+    if (posicao === 3) {
+      return <img src={img3} className="img" />;
+    }
+    return posicao;
   }
   async function handleAdd() {
-    if (senha === '199605') {
+    if (senha === "199605") {
       if (idPost.length === 0) {
         //CADASTRAR NOVO
         await addDoc(collection(db, "posts"), {
           titulo: titulo,
           autor: autor,
-
-        }).then(() => {
-          console.log("Cadastro realizado com sucesso")
-          setIdPost('');
-          setAutor('');
-          setTitulo('');
         })
-          .catch((error) => {
-            console.log("Erro ao Cadastrar post" + error)
+          .then(() => {
+            console.log("Cadastro realizado com sucesso");
+            setIdPost("");
+            setAutor("");
+            setTitulo("");
           })
+          .catch((error) => {
+            console.log("Erro ao Cadastrar post" + error);
+          });
       } else {
         //EDITAR PELO ID
         const docRef = doc(db, "posts", idPost);
         await updateDoc(docRef, {
           titulo: titulo,
           autor: autor,
-        }).then(() => {
-          console.log("psot atualizxado")
-          setShow(false);
-          setAutor("");
-          setTitulo("");
-          setIdPost("");
-        }).catch((error) => {
-          console.log("erro ao atualizar post")
         })
-        setBotao("Cadastrar")
+          .then(() => {
+            console.log("psot atualizxado");
+            setShow(false);
+            setAutor("");
+            setTitulo("");
+            setIdPost("");
+          })
+          .catch((error) => {
+            console.log("erro ao atualizar post");
+          });
+        setBotao("Cadastrar");
       }
-    }else{
-      alert("Senha incorreta")
+    } else {
+      alert("Senha incorreta");
       setShow(false);
-      setIdPost('');
-      setAutor('');
-      setTitulo('');
+      setIdPost("");
+      setAutor("");
+      setTitulo("");
     }
-
-
   }
- 
 
-
-
-  
   return (
-    
     <div className="App">
-     
       <div className="container">
-
         <br></br>
-        <h2 style={{color: "white"}} >Ranking 🏆 </h2>
+        <h2 style={{ color: "white" }}>Ranking 🏆 </h2>
         {/*
       <Button as="a" variant="success" onClick={editarPost}>Editar</Button>
       <hr></hr>
       <Button as="a" variant="primary" onClick={buscarPost}>Atualizar Lista</Button>
       <hr></hr>
       */}
-
-        <Table  bordered >
+        <Table bordered>
           <thead>
             <tr>
-              <th >Posição</th>
+              <th>Posição</th>
               <th>Pontos</th>
               <th>Nome</th>
-              
+
               <th>Ação</th>
             </tr>
           </thead>
           <tbody>
-            {posts.map((post,index) => {
-              
-                
+            {posts.map((post, index) => {
               return (
                 <tr key={post.id}>
                   {index > 2 ? (
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 "  >{index + 1}º  </td>
-                        ) : (
-                          <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 "  >{TestaPosicao(index+1)}</td>
-                        )}
-                  
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{post.autor}</td>
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 ">
+                      {index + 1}º{" "}
+                    </td>
+                  ) : (
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 ">
+                      {TestaPosicao(index + 1)}
+                    </td>
+                  )}
+
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                    {post.autor}
+                  </td>
                   <td>{post.titulo} </td>
-                  
+
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>*/}
 
                     {/*<Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarPostAcao(post.id, post.autor, post.titulo)}>Editar</Button></td>*/}
-                    <Button as="a" variant="outline-primary" size="sm" className="w-100"  onClick={() => abrePerfil(post.id,post.titulo,post.autor,index+1,post.titulos)}>Perfil</Button></td>
+                    <Button
+                      as="a"
+                      variant="outline-primary"
+                      size="sm"
+                      className="w-100"
+                      onClick={() =>
+                        abrePerfil(
+                          post.id,
+                          post.titulo,
+                          post.autor,
+                          index + 1,
+                          post.titulos
+                        )
+                      }
+                    >
+                      Perfil
+                    </Button>
+                  </td>
                 </tr>
-
-              )
+              );
             })}
           </tbody>
         </Table>
-        
-       
-        
-
-        <Button as="a"   variant="success" onClick={handleShow}> 👨‍🚀 Novo Jogador</Button> <Button as="a"  variant="success" onClick={goJogos}> 🎲 Jogos</Button>
+        <Button as="a" variant="success" onClick={handleShow}>
+          {" "}
+          👨‍🚀 Novo Jogador
+        </Button>{" "}
+        <Button as="a" variant="success" onClick={goJogos}>
+          {" "}
+          🎲 Jogos
+        </Button>
       </div>
-      
 
       {/*<Container>
       <h2>Cadastro de pontos</h2>
@@ -324,9 +382,9 @@ function Home() {
     </Form>
     <Button as="a" variant="success" onClick={handleAdd}>{botao}</Button>
     </Container>*/}
-    
+
       <br></br>
-      
+
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Jogador</Modal.Title>
@@ -335,28 +393,49 @@ function Home() {
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>ID Jogador</Form.Label>
-              <Form.Control disabled="true" type="text" placeholder="ID do Jogador" value={idPost} onChange={(e) => setIdPost(e.target.value)} />
+              <Form.Control
+                disabled="true"
+                type="text"
+                placeholder="ID do Jogador"
+                value={idPost}
+                onChange={(e) => setIdPost(e.target.value)}
+              />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Nome</Form.Label>
-              <Form.Control type="text" placeholder="Nome" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
+              <Form.Control
+                type="text"
+                placeholder="Nome"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+              />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Pontos</Form.Label>
-              <Form.Control type="text" pattern="\d*" placeholder="Pontos Totais" value={autor} onChange={(e) => setAutor(e.target.value)} />
+              <Form.Control
+                type="text"
+                pattern="\d*"
+                placeholder="Pontos Totais"
+                value={autor}
+                onChange={(e) => setAutor(e.target.value)}
+              />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
               <Form.Label>Senha</Form.Label>
-              <Form.Control type="password" placeholder="Senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
+              <Form.Control
+                type="password"
+                placeholder="Senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
             </Form.Group>
           </Form>
-          
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Fechar
           </Button>
-          <Button variant="primary"  onClick={handleAdd}>
+          <Button variant="primary" onClick={handleAdd}>
             {botao}
           </Button>
         </Modal.Footer>
@@ -364,75 +443,116 @@ function Home() {
       {/*MODAL PERFIL DE USUARIO*/}
       <Modal show={show2} onHide={handleClose2} size="lg" fullscreen={true}>
         <Modal.Header closeButton>
-          <Modal.Title> {perfilNome} </Modal.Title>
-          
+          <Modal.Title> Perfil </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        
-        {TestaPosicao(perfilPosicaoAtual)} <Badge bg="primary">{perfilPontos} Pontos Totais </Badge>
-        <hr></hr>
-        <h5>Titulos de {perfilNome}: {perfilTitulos}</h5>
-        <hr></hr>
-        <h5>Historico dos ultimos jogos</h5>
-        <Table  bordered >
-          <thead>
-            <tr>
-              <th>Jogo</th>
-              <th>Posição</th>
-              <th>Pontos</th>
-              <th>BI</th>
-              <th>RB</th>
-              <th>AD</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            {jogosJogador.map((jogo,index) => {
-              if(jogo.buyin > 0){
-              if(jogo.posicao === 1 || jogo.posicao === 2){
-
-                return (
-                  <tr key={jogo.idJogo}>
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" >#{jogo.idJogo}</td>
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"> <Badge bg="success">{jogo.posicao} ° </Badge></td>
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">+{jogo.pontos} Pts</td>
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.buyin} </td>
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.rebuy} </td>
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.addon} </td>
-                  </tr>
-                )
-              }else{
-              return (
-                <tr key={jogo.idJogo}>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">#{jogo.idJogo}</td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><b>{jogo.posicao} °</b></td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">+{jogo.pontos} Pts </td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.buyin} </td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.rebuy} </td>
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{jogo.addon} </td>
-
-                </tr>
-              )
-            }
-          }
-            })}
-          </tbody>
-        </Table>
-        <Chart
-      chartType="LineChart"
-      width="100%"
-      height="400px"
-      data={data}
-      options={options}
-    />
-        
+          <div className="containerCards">
+            <Card className="cards" style={{ width: "18rem" }}>
+              <Card.Body>
+                <Card.Title>{perfilNome}</Card.Title>
+                <Card.Text>
+                  <span>
+                    Posição Ranking : {TestaPosicao(perfilPosicaoAtual)}
+                  </span>
+                  <br></br>
+                  <span>Pontos Ranking : {perfilPontos}</span>
+                  <br></br>
+                  <span>Titulos : {perfilTitulos}</span>
+                  <hr></hr>
+                  <Card.Title>Médias</Card.Title>
+                  <Card.Text>
+                    <Badge bg="success">Win Rate : {winrate}% </Badge>
+                    <br></br>
+                    <Badge bg="primary">Média Rebuy por Jogo : {mediaRebuy}</Badge>
+                    <br></br>
+                    <Badge bg="primary">Média AddOn por Jogo : {mediaAddOn}</Badge>
+                    <br></br>
+                    <Badge bg="secondary">Média Gasta por Jogo : R${mediaGasta}</Badge>
+                  </Card.Text>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </div>
+          <hr></hr>
+          <h5>Historico dos ultimos jogos</h5>
+          <Table bordered>
+            <thead>
+              <tr>
+                <th>Jogo</th>
+                <th>Posição</th>
+                <th>Pontos</th>
+                <th>BI</th>
+                <th>RB</th>
+                <th>AD</th>
+              </tr>
+            </thead>
+            <tbody>
+              {jogosJogador.map((jogo, index) => {
+                if (jogo.buyin > 0) {
+                  if (jogo.posicao === 1 || jogo.posicao === 2) {
+                    return (
+                      <tr key={jogo.idJogo}>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          #{jogo.idJogo}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {" "}
+                          <Badge bg="success">{jogo.posicao} ° </Badge>
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          +{jogo.pontos} Pts
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {jogo.buyin}{" "}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {jogo.rebuy}{" "}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {jogo.addon}{" "}
+                        </td>
+                      </tr>
+                    );
+                  } else {
+                    return (
+                      <tr key={jogo.idJogo}>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          #{jogo.idJogo}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          <b>{jogo.posicao} °</b>
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          +{jogo.pontos} Pts{" "}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {jogo.buyin}{" "}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {jogo.rebuy}{" "}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          {jogo.addon}{" "}
+                        </td>
+                      </tr>
+                    );
+                  }
+                }
+              })}
+            </tbody>
+          </Table>
+          <Chart
+            chartType="LineChart"
+            width="100%"
+            height="400px"
+            data={data}
+            options={options}
+          />
         </Modal.Body>
         <Modal.Footer>
-          
           <Button variant="secondary" onClick={handleClose2}>
             Fechar
           </Button>
-          
         </Modal.Footer>
       </Modal>
     </div>
