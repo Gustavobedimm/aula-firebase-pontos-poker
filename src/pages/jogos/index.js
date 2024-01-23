@@ -210,17 +210,17 @@ function Jogos() {
       let posicao = jogadoresJogo.length;
       let pontos = 0;
       if (posicao > 5) {
-        pontos = 1;
+        pontos = 40;
       } else if (posicao === 5) {
-        pontos = 2;
+        pontos = 55;
       } else if (posicao === 4) {
-        pontos = 4;
+        pontos = 65;
       } else if (posicao === 3) {
-        pontos = 6;
+        pontos = 75;
       } else if (posicao === 2) {
-        pontos = 8;
+        pontos = 85;
       } else if (posicao === 1) {
-        pontos = 10;
+        pontos = 100;
       }
       //calculo de pontos
       const docRef = doc(db, "Jogos_Jogadores", id);
