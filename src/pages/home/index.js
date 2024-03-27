@@ -447,7 +447,7 @@ function Home() {
         </Modal.Header>
         <Modal.Body>
           <div className="containerCards">
-            <Card className="cards" style={{ width: "18rem" }}>
+            <Card className="cards" style={{ width: "100%" }}>
               <Card.Body>
                 <Card.Title>{perfilNome}</Card.Title>
                 <Card.Text>
