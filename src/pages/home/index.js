@@ -37,9 +37,9 @@ import Card from "react-bootstrap/Card";
 
 export const options = {
   title: "Performace do Jogador",
-  //curveType: "function",
+  curveType: "function",
   legend: { position: "bottom" },
-  pointSize: 5,
+  pointSize: 10,
 };
 
 function Home() {
@@ -134,6 +134,8 @@ function Home() {
       snapshot2.forEach((doc) => {
         //separa os jogos do jogador escolhido em uma lista
         if (id === doc.data().id_post && doc.data().buyin > 0) {
+          const soma = doc.data().buyin + doc.data().rebuy + doc.data().addon; 
+          const result = doc.data().pontos / soma;
           lista.push({
             id: doc.id,
             nome: doc.data().nome,
@@ -143,6 +145,7 @@ function Home() {
             pontos: doc.data().pontos,
             posicao: doc.data().posicao,
             idJogo: doc.data().idJogo,
+            media: result,
           });
         }
       });
@@ -154,22 +157,21 @@ function Home() {
       setJogosJogador(lista);
       if (lista.length > 0) {
         //alimentando a lista com as informações dos jogos para montar o grafico
-        const temp = [["Year", "Pontos", "Buyin+Rebuy+Addon"]];
+        const temp = [["Year", "Pontos" , "Média"]];
         lista.map((jogadoresJogoTemp) => {
           temp.push([
             "Jogo " + jogadoresJogoTemp.idJogo,
             jogadoresJogoTemp.pontos,
-            jogadoresJogoTemp.rebuy +
-              jogadoresJogoTemp.addon +
-              jogadoresJogoTemp.buyin,
+              jogadoresJogoTemp.media,
+
           ]);
         });
         setData(temp);
       } else {
         //caso o jogador nao tenha nenhum jogo ele manda esses dados
         const temp = [
-          ["Year", "Pontos", "Buyin+Rebuy+Addon"],
-          ["Nenhum", 0, 0],
+          ["Year", "Pontos", "Buyin+Rebuy+Addon" , "Média"],
+          ["Nenhum", 0, 0, 0],
         ];
         //seta em uma lista global para poder ser usado pelo componente
         setData(temp);
@@ -301,9 +303,9 @@ function Home() {
   return (
     <div className="App">
       <div className="container">
-        <Row>
+      {/* <Row>
           <Col>
-            <Card style={{ width: "100%" }}>
+            <Card className="cardsTopMedias" style={{ width: "100%" }}>
               <Card.Header>Melhores Médias</Card.Header>
               <ListGroup variant="flush">
                 <ListGroup.Item>
@@ -321,7 +323,7 @@ function Home() {
               </ListGroup>
             </Card>
           </Col>
-        </Row>
+  </Row>*/}
         <br></br>
         <h2 style={{ color: "white" }}>Ranking 🏆 </h2>
         {/*
@@ -489,7 +491,7 @@ function Home() {
         </Modal.Header>
         <Modal.Body>
           <div className="containerCards">
-            <Card className="cards" style={{ width: "100%" }}>
+            <Card className="cards" style={{ width: "85%" }}>
               <Card.Body>
                 <Card.Title>{perfilNome}</Card.Title>
                 <Card.Text>
@@ -521,6 +523,13 @@ function Home() {
               </Card.Body>
             </Card>
           </div>
+          <Chart
+            chartType="LineChart"
+            width="100%"
+            height="500px"
+            data={data}
+            options={options}
+          />
           <hr></hr>
           <h5>Historico dos ultimos jogos</h5>
           <Table bordered>
@@ -589,13 +598,7 @@ function Home() {
               })}
             </tbody>
           </Table>
-          <Chart
-            chartType="LineChart"
-            width="100%"
-            height="400px"
-            data={data}
-            options={options}
-          />
+          
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose2}>
