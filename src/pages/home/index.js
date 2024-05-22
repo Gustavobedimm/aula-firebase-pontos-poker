@@ -36,7 +36,14 @@ import Card from "react-bootstrap/Card";
 //            ];
 
 export const options = {
-  title: "Performace do Jogador",
+  title: "Quantos pontos você esta ganhando e a média de Pontos por valor gasto.",
+  curveType: "function",
+  chartArea: {'width': '96%', 'height': '70%'},
+  legend: { position: "bottom" },
+  pointSize: 5,
+};
+export const options2 = {
+  title: "Quanto você gasta por jogo.",
   curveType: "function",
   chartArea: {'width': '96%', 'height': '70%'},
   legend: { position: "bottom" },
@@ -46,6 +53,7 @@ export const options = {
 function Home() {
   const [posts, setPosts] = useState([]);
   const [data, setData] = useState([]);
+  const [data2, setData2] = useState([]);
   const [jogosJogador, setJogosJogador] = useState([]);
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
@@ -158,7 +166,8 @@ function Home() {
       setJogosJogador(lista);
       if (lista.length > 0) {
         //alimentando a lista com as informações dos jogos para montar o grafico
-        const temp = [["Year", "Pontos" , "Média"]];
+        const temp = [["Jogo", "Pontos" , "Média"]];
+        const temp2 = [["Jogo", "Reais"]];
         lista.map((jogadoresJogoTemp) => {
           temp.push([
             "Jogo " + jogadoresJogoTemp.idJogo,
@@ -166,16 +175,26 @@ function Home() {
               jogadoresJogoTemp.media,
 
           ]);
+          temp2.push([
+            "Jogo " + jogadoresJogoTemp.idJogo,
+            (jogadoresJogoTemp.buyin + jogadoresJogoTemp.rebuy + jogadoresJogoTemp.addon) * 10,
+          ]);
         });
         setData(temp);
+        setData2(temp2);
       } else {
         //caso o jogador nao tenha nenhum jogo ele manda esses dados
         const temp = [
-          ["Year", "Pontos", "Buyin+Rebuy+Addon" , "Média"],
+          ["Jogo", "Pontos", "Buyin+Rebuy+Addon" , "Média"],
           ["Nenhum", 0, 0, 0],
+        ];
+        const temp2 = [
+          ["Jogo", "Reais"],
+          ["Nenhum", 0],
         ];
         //seta em uma lista global para poder ser usado pelo componente
         setData(temp);
+        setData2(temp2);
       }
       montaMedia(lista);
     });
@@ -530,6 +549,13 @@ function Home() {
             height="500px"
             data={data}
             options={options}
+          />
+          <Chart
+            chartType="LineChart"
+            width="100%"
+            height="500px"
+            data={data2}
+            options={options2}
           />
           <hr></hr>
           <h5>Historico dos ultimos jogos</h5>
