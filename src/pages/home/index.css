@@ -5,6 +5,11 @@
 .cards{
     margin: 10px;
 }
+.cardsTopMedias{
+    margin-top: 10px;
+    opacity: 0.5;
+    
+}
 .containerCards{
     display: flex;
     align-items: center;

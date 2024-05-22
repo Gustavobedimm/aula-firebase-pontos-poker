@@ -17,6 +17,9 @@ import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
 import Badge from "react-bootstrap/Badge";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import ListGroup from "react-bootstrap/ListGroup";
 import userEvent from "@testing-library/user-event";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
@@ -124,9 +127,12 @@ function Home() {
     setPerfilPontos(pontos);
     setPerfilPosicaoAtual(posicaoAtual);
     setPerfilTitulos(titulos);
+    //pega todos os jogos
     const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
       let lista = [];
+      //percorre todos os jogos
       snapshot2.forEach((doc) => {
+        //separa os jogos do jogador escolhido em uma lista
         if (id === doc.data().id_post && doc.data().buyin > 0) {
           lista.push({
             id: doc.id,
@@ -140,13 +146,15 @@ function Home() {
           });
         }
       });
+      //ordena a lista em ordem de idJogo
       lista.sort(function (a, b) {
         return a.idJogo - b.idJogo;
       });
+      //seta em uma listaGlobal para acessar diretamente pelo componente
       setJogosJogador(lista);
       if (lista.length > 0) {
+        //alimentando a lista com as informações dos jogos para montar o grafico
         const temp = [["Year", "Pontos", "Buyin+Rebuy+Addon"]];
-
         lista.map((jogadoresJogoTemp) => {
           temp.push([
             "Jogo " + jogadoresJogoTemp.idJogo,
@@ -158,10 +166,12 @@ function Home() {
         });
         setData(temp);
       } else {
+        //caso o jogador nao tenha nenhum jogo ele manda esses dados
         const temp = [
           ["Year", "Pontos", "Buyin+Rebuy+Addon"],
           ["Nenhum", 0, 0],
         ];
+        //seta em uma lista global para poder ser usado pelo componente
         setData(temp);
       }
       montaMedia(lista);
@@ -216,7 +226,8 @@ function Home() {
         tempwinrate = tempwinrate + 1;
       }
     }
-    let tempMediaGasta = ((tempmediaRebuy+tempmediaAddOn+tempbuyin) * 10) / tamanho;
+    let tempMediaGasta =
+      ((tempmediaRebuy + tempmediaAddOn + tempbuyin) * 10) / tamanho;
     setMediaGasta(tempMediaGasta.toFixed(2));
     let temp1 = tempmediaRebuy / tamanho;
     let temp2 = tempmediaAddOn / tamanho;
@@ -225,7 +236,7 @@ function Home() {
     setMediaAddOn(temp2.toFixed(2));
     if (tempwinrate > 0) {
       temp3 = (tempwinrate * 100) / tamanho;
-       setWinrate(temp3.toFixed(2));
+      setWinrate(temp3.toFixed(2));
     } else {
       setWinrate(0);
     }
@@ -290,6 +301,27 @@ function Home() {
   return (
     <div className="App">
       <div className="container">
+        <Row>
+          <Col>
+            <Card style={{ width: "100%" }}>
+              <Card.Header>Melhores Médias</Card.Header>
+              <ListGroup variant="flush">
+                <ListGroup.Item>
+                  Melhor WinRate :  <Badge bg="primary"> Bedim</Badge> - <Badge bg="success">Venceu {winrate}% das vezes</Badge>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  Melhor Méd. Rebuy : <Badge bg="primary"> Bedim</Badge> - <Badge bg="success">1.47 por jogo</Badge>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  Melhor Méd. AddOn : <Badge bg="primary"> Bedim</Badge> - <Badge bg="success">1.47 por jogo</Badge>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  Melhor Méd. Gasta : <Badge bg="primary"> Bedim</Badge> - <Badge bg="success">R$ 35,47 por jogo</Badge>
+                </ListGroup.Item>
+              </ListGroup>
+            </Card>
+          </Col>
+        </Row>
         <br></br>
         <h2 style={{ color: "white" }}>Ranking 🏆 </h2>
         {/*
@@ -330,7 +362,17 @@ function Home() {
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>*/}
 
-                    <Button as="a" variant="primary" size="sm" className="w-100" onClick={() => editarPostAcao(post.id, post.autor, post.titulo)}>Editar</Button>
+                    <Button
+                      as="a"
+                      variant="primary"
+                      size="sm"
+                      className="w-100"
+                      onClick={() =>
+                        editarPostAcao(post.id, post.autor, post.titulo)
+                      }
+                    >
+                      Editar
+                    </Button>
                     <Button
                       as="a"
                       variant="outline-primary"
@@ -463,11 +505,17 @@ function Home() {
                   <Card.Text>
                     <Badge bg="success">Win Rate : {winrate}% </Badge>
                     <br></br>
-                    <Badge bg="primary">Média Rebuy por Jogo : {mediaRebuy}</Badge>
+                    <Badge bg="primary">
+                      Média Rebuy por Jogo : {mediaRebuy}
+                    </Badge>
                     <br></br>
-                    <Badge bg="primary">Média AddOn por Jogo : {mediaAddOn}</Badge>
+                    <Badge bg="primary">
+                      Média AddOn por Jogo : {mediaAddOn}
+                    </Badge>
                     <br></br>
-                    <Badge bg="secondary">Média Gasta por Jogo : R${mediaGasta}</Badge>
+                    <Badge bg="secondary">
+                      Média Gasta por Jogo : R${mediaGasta}
+                    </Badge>
                   </Card.Text>
                 </Card.Text>
               </Card.Body>
