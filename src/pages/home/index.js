@@ -38,8 +38,9 @@ import Card from "react-bootstrap/Card";
 export const options = {
   title: "Performace do Jogador",
   curveType: "function",
+  chartArea: {'width': '96%', 'height': '70%'},
   legend: { position: "bottom" },
-  pointSize: 10,
+  pointSize: 5,
 };
 
 function Home() {
@@ -491,7 +492,7 @@ function Home() {
         </Modal.Header>
         <Modal.Body>
           <div className="containerCards">
-            <Card className="cards" style={{ width: "85%" }}>
+            <Card className="cards" style={{ width: "100%" }}>
               <Card.Body>
                 <Card.Title>{perfilNome}</Card.Title>
                 <Card.Text>
