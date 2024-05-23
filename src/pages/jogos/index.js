@@ -133,6 +133,8 @@ function Jogos() {
           setJogoAtualInicio(jogo.inicio);
           setJogoAtualFim(jogo.fim);
         } else {
+          const proxSequencia = Number(jogo.sequencia) + 1;
+          setSequencia(proxSequencia);
           setVisible(false);
         }
       });
@@ -187,7 +189,7 @@ function Jogos() {
         setFim("");
       })
       .catch((error) => {
-        console.log("Erro ao Cadastrar post" + error);
+        console.log("Erro ao Cadastrar Jogo" + error);
       });
     jogadoresAddJogo(sequencia);
 
