@@ -7,12 +7,56 @@
 }
 .cardsTopMedias{
     margin-top: 10px;
-    
-    
 }
+.btn-perfil{
+    color: blueviolet;
+    background-color: blueviolet;
+}
+
 .containerCards{
     display: flex;
     align-items: center;
     justify-content: center;
     
 }
+
+
+.button {
+    padding: 3px 30px;
+    border: 0;
+    border-radius: 10px;
+    background-color: #7257fa;
+    color: #ffffff;
+    font-weight: Bold;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+  }
+  
+  .button:hover {
+    background-color: #7257fa;
+    box-shadow: 0 0 20px #7257fa;
+    transform: scale(1.1);
+  }
+  
+  .button:active {
+    background-color: #7257fa;
+    transition: all 0.25s;
+    -webkit-transition: all 0.25s;
+    box-shadow: none;
+    transform: scale(0.98);
+  }
+  .border-esquerda-cima{
+    border-radius: 15px 0px 0px 0px;
+  }
+  .border-direita-cima{
+    border-radius: 0px 15px 0px 0px;
+  }
+  .border-esquerda-baixo{
+    border-radius: 0px 0px 15px 0px;
+  }
+  .border-direita-baixo{
+    border-radius: 0px 0px 0px 15px;
+  }
+  .onFires{
+    background-color: #7257fa;
+  }

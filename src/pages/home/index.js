@@ -29,6 +29,7 @@ import img1 from "../../assets/medalha-de-ouro.png";
 import img2 from "../../assets/medalha-de-prata.png";
 import img3 from "../../assets/medalha-de-bronze.png";
 import Card from "react-bootstrap/Card";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 //const data = [["Year", nome],
 //              ["asd1",10],
@@ -345,24 +346,24 @@ function Home() {
           </Col>
   </Row>*/}
         <br></br>
-        <h2 style={{ color: "white" }}>Ranking 🏆 </h2>
+        <h2 style={{ color: "black" }}>Ranking  </h2>
         {/*
       <Button as="a" variant="success" onClick={editarPost}>Editar</Button>
       <hr></hr>
       <Button as="a" variant="primary" onClick={buscarPost}>Atualizar Lista</Button>
       <hr></hr>
       */}
-        <Table bordered>
-          <thead>
-            <tr>
-              <th>Posição</th>
-              <th>Pontos</th>
+        <Table bordered >
+          <thead >
+            <tr >
+              <th className="border-esquerda-cima">Posição</th>
+              <th >Pontos</th>
               <th>Nome</th>
 
-              <th>Ação</th>
+              <th className="border-direita-cima">Ação</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody >
             {posts.map((post, index) => {
               return (
                 <tr key={post.id}>
@@ -371,7 +372,7 @@ function Home() {
                       {index + 1}º{" "}
                     </td>
                   ) : (
-                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 ">
+                    <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" >
                       {TestaPosicao(index + 1)}
                     </td>
                   )}
@@ -382,7 +383,8 @@ function Home() {
                   <td>{post.titulo} </td>
 
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                    {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>*/}
+                    
+                    {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>
 
                     <Button
                       as="a"
@@ -396,11 +398,7 @@ function Home() {
                       Editar
                     </Button>
                     <Button
-                      as="a"
-                      variant="outline-primary"
-                      size="sm"
-                      className="w-100"
-                      onClick={() =>
+                     onClick={() =>
                         abrePerfil(
                           post.id,
                           post.titulo,
@@ -410,22 +408,45 @@ function Home() {
                         )
                       }
                     >
-                      Perfil
-                    </Button>
+                      <AccountCircleIcon></AccountCircleIcon>
+                    </Button>*/}
+                    <button className="button" onClick={() =>
+                        abrePerfil(
+                          post.id,
+                          post.titulo,
+                          post.autor,
+                          index + 1,
+                          post.titulos
+                        )
+                      }><AccountCircleIcon></AccountCircleIcon></button>
                   </td>
                 </tr>
+                
+                
               );
             })}
+            
           </tbody>
+          <thead >
+            <tr>
+              <th className="border-direita-baixo">Posição</th>
+              <th>Pontos</th>
+              <th>Nome</th>
+
+              <th className="border-esquerda-baixo">Ação</th>
+            </tr>
+          </thead>
         </Table>
-        <Button as="a" variant="success" onClick={handleShow}>
+        <button className="button" onClick={handleShow}>Novo Jogador</button>
+        <button className="button" onClick={goJogos} style={{ marginLeft: "10px" }}>Jogos</button>
+        {/*<Button as="a" variant="success" onClick={handleShow}>
           {" "}
           👨‍🚀 Novo Jogador
         </Button>{" "}
         <Button as="a" variant="success" onClick={goJogos}>
           {" "}
           🎲 Jogos
-        </Button>
+          </Button>*/}
       </div>
 
       {/*<Container>
