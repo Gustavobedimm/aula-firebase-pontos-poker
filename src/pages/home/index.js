@@ -107,8 +107,15 @@ function Home() {
         });
         setPosts(lista2);
       });
+      
+    }
+    async function loadJogos(){
+      const unsub2 = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot3) => {
+        setListaJogos(snapshot3);
+      });
     }
     loadPosts();
+    loadJogos();
   }, []);
 
   async function excluirPost(id) {
@@ -202,72 +209,7 @@ function Home() {
       }
       montaMedia(lista);
       //caso ainda não tenha feito consulta ele entra nesse else para consultar os jogos no banco
-    }else{
-    const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
-      setListaJogos(snapshot2);
-      let lista2 = snapshot2;
-      let lista = [];
-      //percorre todos os jogos
-      lista2.forEach((doc) => {
-        //separa os jogos do jogador escolhido em uma lista
-        if (id === doc.data().id_post && doc.data().buyin > 0) {
-          const soma = doc.data().buyin + doc.data().rebuy + doc.data().addon; 
-          const result = doc.data().pontos / soma;
-          lista.push({
-            id: doc.id,
-            nome: doc.data().nome,
-            buyin: doc.data().buyin,
-            rebuy: doc.data().rebuy,
-            addon: doc.data().addon,
-            pontos: doc.data().pontos,
-            posicao: doc.data().posicao,
-            idJogo: doc.data().idJogo,
-            media: result,
-          });
-        }
-      });
-      //ordena a lista em ordem de idJogo
-      lista.sort(function (a, b) {
-        return a.idJogo - b.idJogo;
-      });
-      //seta em uma listaGlobal para acessar diretamente pelo componente
-      setJogosJogador(lista);
-      if (lista.length > 0) {
-        //alimentando a lista com as informações dos jogos para montar o grafico
-        const temp = [["Jogo", "Pontos" , "Média"]];
-        const temp2 = [["Jogo", "Reais"]];
-        lista.map((jogadoresJogoTemp) => {
-          temp.push([
-            "Jogo " + jogadoresJogoTemp.idJogo,
-            jogadoresJogoTemp.pontos,
-              jogadoresJogoTemp.media,
-
-          ]);
-          temp2.push([
-            "Jogo " + jogadoresJogoTemp.idJogo,
-            (jogadoresJogoTemp.buyin + jogadoresJogoTemp.rebuy + jogadoresJogoTemp.addon) * 10,
-          ]);
-        });
-        setData(temp);
-        setData2(temp2);
-      } else {
-        //caso o jogador nao tenha nenhum jogo ele manda esses dados
-        const temp = [
-          ["Jogo", "Pontos", "Buyin+Rebuy+Addon" , "Média"],
-          ["Nenhum", 0, 0, 0],
-        ];
-        const temp2 = [
-          ["Jogo", "Reais"],
-          ["Nenhum", 0],
-        ];
-        //seta em uma lista global para poder ser usado pelo componente
-        setData(temp);
-        setData2(temp2);
-      }
-      montaMedia(lista);
-    });
-  
-  }
+    }
   }
   async function editarPostAcao(id, autor, titulo) {
     setShow(true);
@@ -330,6 +272,49 @@ function Home() {
       setWinrate(temp3.toFixed(2));
     } else {
       setWinrate(0);
+    }
+  }
+  function montaWinRate(id) {
+    let lista2 = listaJogos;
+      let jogos = [];
+      lista2.forEach((doc) => {
+        //separa os jogos do jogador escolhido em uma lista
+        if (id === doc.data().id_post && doc.data().buyin > 0) {
+          const soma = doc.data().buyin + doc.data().rebuy + doc.data().addon; 
+          const result = doc.data().pontos / soma;
+          jogos.push({
+            id: doc.id,
+            nome: doc.data().nome,
+            buyin: doc.data().buyin,
+            rebuy: doc.data().rebuy,
+            addon: doc.data().addon,
+            pontos: doc.data().pontos,
+            posicao: doc.data().posicao,
+            idJogo: doc.data().idJogo,
+            media: result,
+          });
+        }
+      });
+      //ordena a lista em ordem de idJogo
+      jogos.sort(function (a, b) {
+        return a.idJogo - b.idJogo;
+      });
+
+
+
+    let tempwinrate = 0;
+    let tamanho = jogos.length;
+    for (const item of jogos) {
+      if (item.posicao < 2) {
+        tempwinrate = tempwinrate + 1;
+      }
+    }
+    let temp3 = 0;
+    if (tempwinrate > 0) {
+      temp3 = (tempwinrate * 100) / tamanho;
+      return temp3.toFixed(2);
+    } else {
+      return 0;
     }
   }
 
@@ -451,7 +436,7 @@ function Home() {
                   {index > 2 ? (
                     <td>{post.titulo}  </td>
                   ) : (
-                    <td>{post.titulo} <span className="taxaVitoria">Taxa de vitória 10%</span> </td>
+                    <td>{post.titulo} <br/><span className="taxaVitoria">Taxa de vitória {montaWinRate(post.id)} %</span> </td>
                   )}
                   
 

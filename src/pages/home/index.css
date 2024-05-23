@@ -11,9 +11,11 @@
 .modalHeader{
     color: white;
     background-color: #7257fa;
+    
 }
 .modalBody{
   background-color: #e8e8e8;
+  
 }
 
 .containerCards{
@@ -63,8 +65,8 @@
   .taxaVitoria{
     font-size: 10px;
     border-radius: 10px;
-    padding-left: 3px;
-    padding-right: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
     color: #ffffff;
-    background-color: #7257fa;
+    background-color: #17924e;
   }
