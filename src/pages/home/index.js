@@ -436,7 +436,7 @@ function Home() {
                   {index > 2 ? (
                     <td>{post.titulo}  </td>
                   ) : (
-                    <td>{post.titulo} <br/><span className="taxaVitoria">Taxa de vitória {montaWinRate(post.id)} %</span> </td>
+                    <td>{post.titulo} <br/><span className="taxaVitoria">{montaWinRate(post.id)} % de vitórias</span> </td>
                   )}
                   
 
