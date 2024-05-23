@@ -56,6 +56,7 @@ function Home() {
   const [data, setData] = useState([]);
   const [data2, setData2] = useState([]);
   const [jogosJogador, setJogosJogador] = useState([]);
+  const [listaJogos, setListaJogos] = useState([]);
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
   const [idPost, setIdPost] = useState("");
@@ -67,6 +68,7 @@ function Home() {
   const [mediaAddOn, setMediaAddOn] = useState("");
   const [winrate, setWinrate] = useState("");
   const [mediaGasta, setMediaGasta] = useState("");
+  const [carregaJogos, setCarregaJogos] = useState(false);
 
   const [botao, setBotao] = useState("Cadastrar");
   const [show, setShow] = useState(false);
@@ -138,10 +140,75 @@ function Home() {
     setPerfilPosicaoAtual(posicaoAtual);
     setPerfilTitulos(titulos);
     //pega todos os jogos
+    //se os dados ja estiverem na memoria ele não faz a consulta novamente ele usa os da memoria para evitar fazer varias consulta no banco
+    if(listaJogos.size > 0){
+      let lista2 = listaJogos;
+      let lista = [];
+      lista2.forEach((doc) => {
+        //separa os jogos do jogador escolhido em uma lista
+        if (id === doc.data().id_post && doc.data().buyin > 0) {
+          const soma = doc.data().buyin + doc.data().rebuy + doc.data().addon; 
+          const result = doc.data().pontos / soma;
+          lista.push({
+            id: doc.id,
+            nome: doc.data().nome,
+            buyin: doc.data().buyin,
+            rebuy: doc.data().rebuy,
+            addon: doc.data().addon,
+            pontos: doc.data().pontos,
+            posicao: doc.data().posicao,
+            idJogo: doc.data().idJogo,
+            media: result,
+          });
+        }
+      });
+      //ordena a lista em ordem de idJogo
+      lista.sort(function (a, b) {
+        return a.idJogo - b.idJogo;
+      });
+      //seta em uma listaGlobal para acessar diretamente pelo componente
+      setJogosJogador(lista);
+      if (lista.length > 0) {
+        //alimentando a lista com as informações dos jogos para montar o grafico
+        const temp = [["Jogo", "Pontos" , "Média"]];
+        const temp2 = [["Jogo", "Reais"]];
+        lista.map((jogadoresJogoTemp) => {
+          temp.push([
+            "Jogo " + jogadoresJogoTemp.idJogo,
+            jogadoresJogoTemp.pontos,
+              jogadoresJogoTemp.media,
+
+          ]);
+          temp2.push([
+            "Jogo " + jogadoresJogoTemp.idJogo,
+            (jogadoresJogoTemp.buyin + jogadoresJogoTemp.rebuy + jogadoresJogoTemp.addon) * 10,
+          ]);
+        });
+        setData(temp);
+        setData2(temp2);
+      } else {
+        //caso o jogador nao tenha nenhum jogo ele manda esses dados
+        const temp = [
+          ["Jogo", "Pontos", "Buyin+Rebuy+Addon" , "Média"],
+          ["Nenhum", 0, 0, 0],
+        ];
+        const temp2 = [
+          ["Jogo", "Reais"],
+          ["Nenhum", 0],
+        ];
+        //seta em uma lista global para poder ser usado pelo componente
+        setData(temp);
+        setData2(temp2);
+      }
+      montaMedia(lista);
+      //caso ainda não tenha feito consulta ele entra nesse else para consultar os jogos no banco
+    }else{
     const unsub = onSnapshot(collection(db, "Jogos_Jogadores"), (snapshot2) => {
+      setListaJogos(snapshot2);
+      let lista2 = snapshot2;
       let lista = [];
       //percorre todos os jogos
-      snapshot2.forEach((doc) => {
+      lista2.forEach((doc) => {
         //separa os jogos do jogador escolhido em uma lista
         if (id === doc.data().id_post && doc.data().buyin > 0) {
           const soma = doc.data().buyin + doc.data().rebuy + doc.data().addon; 
@@ -199,6 +266,8 @@ function Home() {
       }
       montaMedia(lista);
     });
+  
+  }
   }
   async function editarPostAcao(id, autor, titulo) {
     setShow(true);
@@ -249,8 +318,7 @@ function Home() {
         tempwinrate = tempwinrate + 1;
       }
     }
-    let tempMediaGasta =
-      ((tempmediaRebuy + tempmediaAddOn + tempbuyin) * 10) / tamanho;
+    let tempMediaGasta = ((tempmediaRebuy + tempmediaAddOn + tempbuyin) * 10) / tamanho;
     setMediaGasta(tempMediaGasta.toFixed(2));
     let temp1 = tempmediaRebuy / tamanho;
     let temp2 = tempmediaAddOn / tamanho;
@@ -264,6 +332,7 @@ function Home() {
       setWinrate(0);
     }
   }
+
   function TestaPosicao(posicao) {
     if (posicao === 1) {
       return <img src={img1} className="img" />;
@@ -377,10 +446,14 @@ function Home() {
                     </td>
                   )}
 
-                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                    {post.autor}
-                  </td>
-                  <td>{post.titulo} </td>
+                  <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{post.autor}</td>
+                  
+                  {index > 2 ? (
+                    <td>{post.titulo}  </td>
+                  ) : (
+                    <td>{post.titulo} <span className="taxaVitoria">Taxa de vitória 10%</span> </td>
+                  )}
+                  
 
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     
@@ -469,7 +542,7 @@ function Home() {
     </Container>*/}
 
       <br></br>
-
+      {/*MODAL EDITAR PONTOS DO USUARIO*/}
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Jogador</Modal.Title>
@@ -525,12 +598,14 @@ function Home() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+
       {/*MODAL PERFIL DE USUARIO*/}
       <Modal show={show2} onHide={handleClose2} size="lg" fullscreen={true}>
-        <Modal.Header closeButton>
-          <Modal.Title> Perfil </Modal.Title>
+        <Modal.Header closeButton className="modalHeader">
+          <Modal.Title> Estatística do Jogador </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body >
           <div className="containerCards">
             <Card className="cards" style={{ width: "100%" }}>
               <Card.Body>
@@ -546,7 +621,7 @@ function Home() {
                   <hr></hr>
                   <Card.Title>Médias</Card.Title>
                   <Card.Text>
-                    <Badge bg="success">Win Rate : {winrate}% </Badge>
+                    <Badge bg="success">Taxa de vitória : {winrate}% </Badge>
                     <br></br>
                     <Badge bg="primary">
                       Média Rebuy por Jogo : {mediaRebuy}

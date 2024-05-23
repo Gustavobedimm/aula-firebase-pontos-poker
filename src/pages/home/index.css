@@ -8,9 +8,12 @@
 .cardsTopMedias{
     margin-top: 10px;
 }
-.btn-perfil{
-    color: blueviolet;
-    background-color: blueviolet;
+.modalHeader{
+    color: white;
+    background-color: #7257fa;
+}
+.modalBody{
+  background-color: #e8e8e8;
 }
 
 .containerCards{
@@ -57,6 +60,11 @@
   .border-direita-baixo{
     border-radius: 0px 0px 0px 15px;
   }
-  .onFires{
+  .taxaVitoria{
+    font-size: 10px;
+    border-radius: 10px;
+    padding-left: 3px;
+    padding-right: 3px;
+    color: #ffffff;
     background-color: #7257fa;
   }
