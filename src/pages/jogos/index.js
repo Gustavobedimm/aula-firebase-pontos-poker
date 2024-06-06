@@ -238,6 +238,20 @@ function Jogos() {
     }
     setShow2(false);
   }
+  async function voltaParaOJogo(id) {
+    
+      const docRef = doc(db, "Jogos_Jogadores", id);
+      await updateDoc(docRef, {
+        ativo: true,
+        
+      })
+        .then(() => {})
+        .catch((error) => {
+          alert(error);
+        });
+    
+    
+  }
   async function alteraJogadorJogo() {
     const docRef = doc(db, "Jogos_Jogadores", idJogadorJogo);
     await updateDoc(docRef, {
@@ -547,6 +561,7 @@ function Jogos() {
                     <th>Ao</th>
                     <th>Pontos</th>
                     <th>Posição</th>
+                    <th>Ação</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -598,6 +613,19 @@ function Jogos() {
                         <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                           {" "}
                           {jogadoresJogo.posicao}
+                        </td>
+                        <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                          <Button
+                            as="a"
+                            variant="danger"
+                            size="sm"
+                            className="w-100"
+                            onClick={() =>
+                              voltaParaOJogo(jogadoresJogo.id)
+                            }
+                          >
+                            Voltar
+                          </Button>
                         </td>
                       </tr>
                     );
