@@ -442,9 +442,11 @@ function Home() {
 
                   <td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
                     
-                    {/*<Button as="a" variant="danger" onClick={() => excluirPost(post.id)}>Deletar</Button>
+                  <button className="button" onClick={() =>
+                        editarPostAcao(post.id, post.autor, post.titulo)
+                      }>Editar</button>
 
-                    <Button
+                    {/*<Button
                       as="a"
                       variant="primary"
                       size="sm"
@@ -476,7 +478,7 @@ function Home() {
                           index + 1,
                           post.titulos
                         )
-                      }><AccountCircleIcon></AccountCircleIcon></button>
+                      }>Perfil</button>
                   </td>
                 </tr>
                 
